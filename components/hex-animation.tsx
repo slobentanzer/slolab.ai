@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { hexCoordinates } from "../data/hex-coordinates/index";
 
 interface HexPixel {
     id: number;
@@ -14,7 +15,7 @@ interface Shape {
     name: string;
     description: string;
     link: string;
-    pixels: HexPixel[];
+    pixels: (() => Promise<HexPixel[]>) | HexPixel[];
 }
 
 // Helper function to generate a grid of hex pixels
@@ -52,10 +53,10 @@ const lerp = (start: number, end: number, t: number) => {
 
 const shapes: Shape[] = [
     {
-        name: "Search & Discovery",
-        description: "Intelligent document search and analysis",
+        name: "Search and Discovery",
+        description: "Find and explore relevant information",
         link: "/search",
-        pixels: generateHexGrid(100, 100, 48, 48, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)") // 4x more rows and columns
+        pixels: hexCoordinates.searchDiscovery
     },
     {
         name: "Knowledge Graph",
@@ -83,11 +84,23 @@ interface HexAnimationProps {
 
 export default function HexAnimation({ currentShape }: HexAnimationProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [pixels, setPixels] = useState<HexPixel[]>([]);
+
+    useEffect(() => {
+        const loadPixels = async () => {
+            const currentPixels = typeof shapes[currentShape].pixels === 'function'
+                ? await shapes[currentShape].pixels()
+                : shapes[currentShape].pixels;
+            setPixels(currentPixels);
+        };
+
+        loadPixels();
+    }, [currentShape]);
 
     return (
         <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
             <div ref={containerRef} className="absolute inset-0 flex items-center justify-center">
-                {shapes[currentShape].pixels.map((pixel) => (
+                {pixels.map((pixel) => (
                     <motion.div
                         key={pixel.id}
                         className="absolute hex"

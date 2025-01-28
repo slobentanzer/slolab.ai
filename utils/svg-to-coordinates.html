@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SVG to Coordinates Converter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+        }
+
+        #preview {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            background: #f0f0f0;
+        }
+
+        .hex {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>SVG to Coordinates Converter</h1>
+
+    <h3>1. Paste your SVG content here:</h3>
+    <textarea id="svgInput"></textarea>
+
+    <h3>2. Adjust parameters:</h3>
+    <div>
+        Grid Width: <input type="number" id="gridWidth" value="48" />
+        Grid Height: <input type="number" id="gridHeight" value="48" />
+        Scale: <input type="number" id="scale" value="10" step="0.5" />
+    </div>
+
+    <button onclick="convert()">Convert</button>
+
+    <h3>3. Preview:</h3>
+    <div id="preview" style="width: 600px; height: 600px; position: relative;"></div>
+
+    <h3>4. Generated Coordinates:</h3>
+    <textarea id="output" readonly></textarea>
+
+    <script>
+        function lerp(start, end, t) {
+            return start * (1 - t) + end * t;
+        }
+
+        function convert() {
+            const svgContent = document.getElementById('svgInput').value;
+            const gridWidth = parseInt(document.getElementById('gridWidth').value);
+            const gridHeight = parseInt(document.getElementById('gridHeight').value);
+            const scale = parseFloat(document.getElementById('scale').value);
+
+            const pixels = [];
+            let id = 1;
+            const hexWidth = 5;
+            const hexHeight = 4.25;
+
+            // Create working SVG
+            const workingSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            workingSvg.setAttribute('width', '100%');
+            workingSvg.setAttribute('height', '100%');
+            workingSvg.setAttribute('viewBox', '0 0 23 19');
+            document.body.appendChild(workingSvg);
+
+            // Get the path from original SVG
+            const container = document.createElement('div');
+            container.innerHTML = svgContent;
+            const originalPath = container.querySelector('path');
+
+            if (!originalPath) {
+                console.error('No path found in SVG');
+                return;
+            }
+
+            // Create working path
+            const path = originalPath.cloneNode(true);
+            path.setAttribute('transform', `scale(${scale})`);
+            workingSvg.appendChild(path);
+
+            // Generate pixels
+            for (let row = 0; row < gridHeight; row++) {
+                for (let col = 0; col < gridWidth; col++) {
+                    const x = col * hexWidth + (row % 2) * (hexWidth / 2);
+                    const y = row * (hexHeight * 0.75);
+
+                    const point = workingSvg.createSVGPoint();
+                    point.x = x / scale;
+                    point.y = y / scale;
+
+                    try {
+                        if (path.isPointInFill(point)) {
+                            const progress = (row * gridWidth + col) / (gridHeight * gridWidth);
+                            const opacity = 0.4 + Math.random() * 0.3;
+                            const color = `rgba(${Math.round(lerp(99, 249, progress))}, ${Math.round(lerp(102, 115, progress))}, ${Math.round(lerp(241, 22, progress))}, ${opacity})`;
+
+                            pixels.push({ id: id++, x, y, color });
+                        }
+                    } catch (error) {
+                        console.error('Error testing point:', error);
+                    }
+                }
+            }
+
+            // Clean up
+            document.body.removeChild(workingSvg);
+
+            // Display results
+            const preview = document.getElementById('preview');
+            preview.innerHTML = '';
+            pixels.forEach(pixel => {
+                const div = document.createElement('div');
+                div.className = 'hex';
+                div.style.backgroundColor = pixel.color;
+                div.style.left = pixel.x + 100 + 'px';
+                div.style.top = pixel.y + 100 + 'px';
+                preview.appendChild(div);
+            });
+
+            document.getElementById('output').value =
+                'pixels: [\n' +
+                pixels.map(p => `    { id: ${p.id}, x: ${p.x}, y: ${p.y}, color: "${p.color}" }`).join(',\n') +
+                '\n]';
+        }
+    </script>
+</body>
+
+</html>
