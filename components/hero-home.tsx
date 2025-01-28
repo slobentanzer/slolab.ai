@@ -1,64 +1,106 @@
-import VideoThumb from "@/public/images/hero-image-01.jpg";
-import ModalVideo from "@/components/modal-video";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import HexAnimation from "./hex-animation";
 
 export default function HeroHome() {
+  const [activeSection, setActiveSection] = useState(0);
+  const sectionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionsRef.current) return;
+
+      const sections = sectionsRef.current.children;
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i] as HTMLElement;
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+
+        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+          setActiveSection(i);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <section>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Hero content */}
-        <div className="py-12 md:py-20">
-          {/* Section header */}
-          <div className="pb-12 text-center md:pb-20">
-            <h1
-              className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200),theme(colors.gray.50),theme(colors.indigo.300),theme(colors.gray.200))] bg-[length:200%_auto] bg-clip-text pb-5 font-nacelle text-4xl font-semibold text-transparent md:text-5xl"
-              data-aos="fade-up"
-            >
-              AI-driven tools for product teams
-            </h1>
-            <div className="mx-auto max-w-3xl">
-              <p
-                className="mb-8 text-xl text-indigo-200/65"
-                data-aos="fade-up"
-                data-aos-delay={200}
-              >
-                Our landing page template works on all devices, so you only have
-                to set it up once, and get beautiful results forever.
+    <section className="relative min-h-screen">
+      {/* Left scrollable content */}
+      <div className="w-1/2 pl-16 pr-8">
+        <div ref={sectionsRef} className="space-y-screen pb-screen">
+          {/* Search Section */}
+          <div className="min-h-screen flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Search & Discovery
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                Intelligent document search and analysis powered by advanced AI algorithms.
               </p>
-              <div className="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center">
-                <div data-aos="fade-up" data-aos-delay={400}>
-                  <a
-                    className="btn group mb-4 w-full bg-gradient-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] text-white shadow-[inset_0px_1px_0px_0px_theme(colors.white/.16)] hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
-                    href="#0"
-                  >
-                    <span className="relative inline-flex items-center">
-                      Start Building
-                      <span className="ml-1 tracking-normal text-white/50 transition-transform group-hover:translate-x-0.5">
-                        -&gt;
-                      </span>
-                    </span>
-                  </a>
-                </div>
-                <div data-aos="fade-up" data-aos-delay={600}>
-                  <a
-                    className="btn relative w-full bg-gradient-to-b from-gray-800 to-gray-800/60 bg-[length:100%_100%] bg-[bottom] text-gray-300 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,theme(colors.gray.800),theme(colors.gray.700),theme(colors.gray.800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-[length:100%_150%] sm:ml-4 sm:w-auto"
-                    href="#0"
-                  >
-                    Schedule Demo
-                  </a>
-                </div>
-              </div>
+              <a href="/search" className="text-indigo-500 hover:text-indigo-400">
+                Learn more about our search capabilities →
+              </a>
             </div>
           </div>
 
-          <ModalVideo
-            thumb={VideoThumb}
-            thumbWidth={1104}
-            thumbHeight={576}
-            thumbAlt="Modal video thumbnail"
-            video="videos//video.mp4"
-            videoWidth={1920}
-            videoHeight={1080}
-          />
+          {/* Graph Section */}
+          <div className="min-h-screen flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Knowledge Graph
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                Connected information network that reveals hidden relationships and insights.
+              </p>
+              <a href="/graph" className="text-indigo-500 hover:text-indigo-400">
+                Explore our knowledge graph →
+              </a>
+            </div>
+          </div>
+
+          {/* Chat Section */}
+          <div className="min-h-screen flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Conversational AI
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                Natural language understanding and generation for human-like interactions.
+              </p>
+              <a href="/chat" className="text-indigo-500 hover:text-indigo-400">
+                Start a conversation →
+              </a>
+            </div>
+          </div>
+
+          {/* Deep Learning Section */}
+          <div className="min-h-screen flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Deep Learning
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                Advanced neural network architectures pushing the boundaries of AI.
+              </p>
+              <a href="/deep-learning" className="text-indigo-500 hover:text-indigo-400">
+                Discover our deep learning models →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right fixed hex animation */}
+      <div className="fixed right-0 top-1/2 -translate-y-1/2 w-1/2 h-screen flex items-center justify-center mt-32">
+        <div className="w-[600px] h-[600px]">
+          <HexAnimation currentShape={activeSection} />
         </div>
       </div>
     </section>
