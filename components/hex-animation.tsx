@@ -51,30 +51,38 @@ const lerp = (start: number, end: number, t: number) => {
     return start * (1 - t) + end * t;
 };
 
+const scaleCoordinates = (pixels: HexPixel[], scale: number = 1.2): HexPixel[] => {
+    return pixels.map(pixel => ({
+        ...pixel,
+        x: pixel.x * scale,
+        y: pixel.y * scale
+    }));
+};
+
 const shapes: Shape[] = [
     {
         name: "Search and Discovery",
         description: "Find and explore relevant information",
         link: "/search",
-        pixels: hexCoordinates.searchDiscovery
+        pixels: () => Promise.resolve(scaleCoordinates(hexCoordinates.searchDiscovery))
     },
     {
         name: "Knowledge Graph",
         description: "Connected information network",
         link: "/graph",
-        pixels: generateHexGrid(150, 50, 40, 56, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
+        pixels: generateHexGrid(150, 50, 80, 100, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
     },
     {
         name: "Conversational AI",
         description: "Natural language understanding and generation",
         link: "/chat",
-        pixels: generateHexGrid(200, 100, 44, 44, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
+        pixels: generateHexGrid(200, 100, 85, 85, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
     },
     {
         name: "Deep Learning",
         description: "Advanced neural network architectures",
         link: "/deep-learning",
-        pixels: generateHexGrid(100, 150, 52, 40, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
+        pixels: generateHexGrid(100, 150, 95, 80, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
     }
 ];
 
@@ -99,7 +107,7 @@ export default function HexAnimation({ currentShape }: HexAnimationProps) {
 
     return (
         <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
-            <div ref={containerRef} className="absolute inset-0 flex items-center justify-center">
+            <div ref={containerRef} className="absolute inset-0 flex items-center justify-center translate-y-[10%]">
                 {pixels.map((pixel) => (
                     <motion.div
                         key={pixel.id}
@@ -113,8 +121,8 @@ export default function HexAnimation({ currentShape }: HexAnimationProps) {
                         animate={{
                             opacity: 1,
                             scale: 1,
-                            x: pixel.x - 300,
-                            y: pixel.y - 300,
+                            x: pixel.x - 200,
+                            y: pixel.y - 250,
                         }}
                         exit={{ opacity: 0, scale: 0 }}
                         transition={{
