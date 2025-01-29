@@ -105,7 +105,7 @@ export default function HeroHome() {
                 Knowledge Extraction
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images. We'll add this to our existing solutions for{' '}
+                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images. This new framework will join our existing solutions for{' '}
                 <a
                   href="#knowledge-representation"
                   onClick={(e) => handleClick(e, 'knowledge-representation')}
