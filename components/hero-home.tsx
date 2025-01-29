@@ -53,8 +53,40 @@ export default function HeroHome() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 350; // Adjust this value to control how far above the element to stop
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
+      const startPosition = window.scrollY;
+      const distance = elementPosition - startPosition;
+      const duration = 500;
+      let start: number;
+
+      function animation(currentTime: number) {
+        if (!start) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+
+        // Easing function for smoother animation
+        const ease = (t: number) => t < 0.5
+          ? 4 * t * t * t
+          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+        window.scrollTo(0, startPosition + (distance * ease(progress)));
+
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      }
+
+      requestAnimationFrame(animation);
+    }
+  };
+
   return (
-    <section className="relative min-h-screen">
+    <section className="relative min-h-screen scroll-smooth">
       <NeonBackground />
       {/* Left scrollable content */}
       <div className="w-1/2 pl-36 pr-8">
@@ -66,7 +98,22 @@ export default function HeroHome() {
                 Knowledge Extraction
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images.
+                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images. We'll add this to our existing solutions for{' '}
+                <a
+                  href="#knowledge-representation"
+                  onClick={(e) => handleClick(e, 'knowledge-representation')}
+                  className="text-indigo-500 hover:text-indigo-400"
+                >
+                  knowledge representation
+                </a>{' '}
+                and{' '}
+                <a
+                  href="#conversational-ai"
+                  onClick={(e) => handleClick(e, 'conversational-ai')}
+                  className="text-indigo-500 hover:text-indigo-400"
+                >
+                  conversational AI
+                </a>.
               </p>
               <a href="/search" className="text-indigo-500 hover:text-indigo-400">
                 Python framework coming soon →
@@ -75,7 +122,7 @@ export default function HeroHome() {
           </div>
 
           {/* Graph Section */}
-          <div className="min-h-[50vh] flex items-center">
+          <div id="knowledge-representation" className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
                 Knowledge Representation
@@ -98,7 +145,7 @@ export default function HeroHome() {
           </div>
 
           {/* Chat Section */}
-          <div className="min-h-[50vh] flex items-center">
+          <div id="conversational-ai" className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
                 Conversational AI
