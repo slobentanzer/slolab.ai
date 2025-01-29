@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <header className="z-30 mt-2 w-full md:mt-5">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="relative flex h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/[0.2] px-12 backdrop-blur-[1px] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,rgb(236,72,153,0.01),theme(colors.gray.800/2),rgb(236,72,153,0.01))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+        <div className="relative flex flex-col sm:flex-row h-auto sm:h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/[0.2] px-4 sm:px-12 py-4 sm:py-0 backdrop-blur-[1px] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,rgb(236,72,153,0.01),theme(colors.gray.800/2),rgb(236,72,153,0.01))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
           {/* Site branding */}
           <div className="flex flex-1 items-center">
             <Logo />
@@ -22,9 +22,9 @@ export default function Header() {
               className="flex items-center justify-center gap-1 text-gray-200 hover:text-indigo-500 transition-colors"
               aria-label="GitHub"
             >
-              <span className="text-lg font-medium">Find us on GitHub</span>
+              <span className="text-base sm:text-lg font-medium">Find us on GitHub</span>
               <svg
-                className="h-12 w-12 fill-current"
+                className="h-8 w-8 sm:h-12 sm:w-12 fill-current"
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
               >
