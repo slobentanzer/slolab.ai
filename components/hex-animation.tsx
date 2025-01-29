@@ -125,20 +125,28 @@ const shapes: Shape[] = [
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.knowledgeGraph,
             1.2,
-            'bottom-left-to-top-right'
+            'top-left-to-bottom-right'
         ))
     },
     {
         name: "Conversational AI",
         description: "Natural language understanding and generation",
         link: "/chat",
-        pixels: generateHexGrid(200, 100, 85, 85, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
+        pixels: () => Promise.resolve(colorizeCoordinates(
+            hexCoordinates.conversationalAi,
+            1.2,
+            'left-to-right'
+        ))
     },
     {
         name: "Deep Learning",
         description: "Advanced neural network architectures",
         link: "/deep-learning",
-        pixels: generateHexGrid(100, 150, 95, 80, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
+        pixels: () => Promise.resolve(colorizeCoordinates(
+            hexCoordinates.deepLearning,
+            1.2,
+            'bottom-to-top'
+        ))
     }
 ];
 
