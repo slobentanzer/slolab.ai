@@ -19,7 +19,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  slobentanzer.github.io
+                  Contact: slobentanzer.github.io
                 </a>
               </p>
             </div>
