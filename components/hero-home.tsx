@@ -45,7 +45,7 @@ export default function HeroHome() {
   return (
     <section className="relative min-h-screen">
       {/* Left scrollable content */}
-      <div className="w-1/2 pl-16 pr-8">
+      <div className="w-1/2 pl-24 pr-8">
         <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[50vh]">
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
