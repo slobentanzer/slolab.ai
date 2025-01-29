@@ -10,6 +10,7 @@ interface HexPixel {
     x: number;
     y: number;
     color: string;
+    matchingValue?: number;
 }
 
 interface Shape {
@@ -244,14 +245,14 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
 
                 let bestMatchIndex = 0;
                 let bestMatchDiff = Math.abs(
-                    availableNextPixels[0].matchingValue -
-                    currentPixel.matchingValue
+                    (availableNextPixels[0].matchingValue ?? 0) -
+                    (currentPixel.matchingValue ?? 0)
                 );
 
                 for (let i = 1; i < availableNextPixels.length; i++) {
                     const diff = Math.abs(
-                        availableNextPixels[i].matchingValue -
-                        currentPixel.matchingValue
+                        (availableNextPixels[i].matchingValue ?? 0) -
+                        (currentPixel.matchingValue ?? 0)
                     );
                     if (diff < bestMatchDiff) {
                         bestMatchDiff = diff;
