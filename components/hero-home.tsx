@@ -55,7 +55,7 @@ export default function HeroHome() {
   return (
     <section className="relative min-h-screen">
       {/* Left scrollable content */}
-      <div className="w-1/2 pl-24 pr-8">
+      <div className="w-1/2 pl-36 pr-8">
         <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[50vh]">
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
@@ -120,8 +120,8 @@ export default function HeroHome() {
       </div>
 
       {/* Right hex animation container */}
-      <div className="absolute top-0 right-0 w-1/2 h-[calc(100%-15vh)]">
-        <div className="sticky top-0 h-screen flex items-center justify-center">
+      <div className="absolute top-0 right-0 w-1/2 h-[calc(100%-23vh)]">
+        <div className="sticky top-0 h-screen flex items-center justify-center pr-0 pt-32">
           <div className="w-[600px] h-[600px]">
             <HexAnimation progress={scrollProgress} />
           </div>
