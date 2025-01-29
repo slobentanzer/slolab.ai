@@ -128,7 +128,14 @@ export default function HeroHome() {
                 Knowledge Representation
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                We have created a knowledge graph framework that allows flexible customisation and rapid prototyping via an open-source Python package, BioCypher.
+                We have created a knowledge graph framework that allows flexible customisation and rapid prototyping via an open-source Python package, BioCypher. Interacts natively with our conversational AI solution,{' '}
+                <a
+                  href="#conversational-ai"
+                  onClick={(e) => handleClick(e, 'conversational-ai')}
+                  className="text-indigo-500 hover:text-indigo-400"
+                >
+                  BioChatter
+                </a>.
               </p>
               <a href="https://www.nature.com/articles/s41587-023-01848-y" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
                 Read the paper →
@@ -151,7 +158,15 @@ export default function HeroHome() {
                 Conversational AI
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                We modernise the way scientists interact with data and knowledge using the recent progress in generative AI in an open-source framework, BioChatter.
+                We modernise the way scientists interact with data and knowledge using the recent progress in generative AI in an open-source framework, BioChatter. Built to work seamlessly with our{' '}
+                <a
+                  href="#knowledge-representation"
+                  onClick={(e) => handleClick(e, 'knowledge-representation')}
+                  className="text-indigo-500 hover:text-indigo-400"
+                >
+                  knowledge representation
+                </a>{' '}
+                framework.
               </p>
               <a href="https://www.nature.com/articles/s41587-024-02534-3" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
                 Read the paper →
