@@ -135,7 +135,7 @@ export default function HeroHome() {
 
       {/* Right hex animation container */}
       <div className="absolute top-0 right-0 w-1/2 h-[calc(100%-23vh)]">
-        <div className="sticky top-0 h-screen flex items-center justify-center pr-0 pt-32">
+        <div className="sticky top-0 h-screen flex items-center justify-center pr-0 pt-16">
           <div className="w-[600px] h-[600px]">
             <HexAnimation progress={scrollProgress} />
           </div>

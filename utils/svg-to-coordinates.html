@@ -94,7 +94,7 @@
             const workingSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             workingSvg.setAttribute('width', '100%');
             workingSvg.setAttribute('height', '100%');
-            workingSvg.setAttribute('viewBox', '0 0 22 18');
+            workingSvg.setAttribute('viewBox', '0 0 100 100');
             document.body.appendChild(workingSvg);
 
             // Get the path from original SVG
@@ -107,13 +107,33 @@
                 return;
             }
 
-            // Create working path
+            // Create working path and calculate proper scaling
             const path = originalPath.cloneNode(true);
+            const originalSvg = container.querySelector('svg');
+            const originalViewBox = originalSvg.getAttribute('viewBox').split(' ').map(Number);
+
+            // Calculate scaling to fit the entire path
+            const pathWidth = originalViewBox[2];
+            const pathHeight = originalViewBox[3];
+            const gridWidthPx = gridWidth * hexWidth;
+            const gridHeightPx = gridHeight * hexHeight;
+
+            // Calculate scale to fit the path within our grid
+            const scaleX = (gridWidthPx * 0.8) / pathWidth;  // Use 80% of grid width
+            const scaleY = (gridHeightPx * 0.8) / pathHeight; // Use 80% of grid height
+            const initialScale = Math.min(scaleX, scaleY);
+
+            // Center the path
+            const translateX = (100 - (pathWidth * initialScale)) / 2;
+            const translateY = (100 - (pathHeight * initialScale)) / 2;
+
+            // Apply transform to center and scale the path
+            path.setAttribute('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
             workingSvg.appendChild(path);
 
-            // Binary search to find the right scale
-            let minScale = 0.01;
-            let maxScale = 50;
+            // Adjust binary search parameters around our initial scale
+            let minScale = initialScale * 0.5;
+            let maxScale = initialScale * 1.5;
             let iterations = 0;
             const maxIterations = 100;
             let bestScale = scale;
