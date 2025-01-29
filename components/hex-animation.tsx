@@ -63,27 +63,47 @@ const lerp = (start: number, end: number, t: number) => {
 };
 
 const generateColor = (progress: number, opacity: number = 0.5) => {
-    // You can adjust these RGB values to change the gradient colors
-    const startColor = { r: 99, g: 102, b: 241 }; // Indigo
-    const endColor = { r: 249, g: 115, b: 22 };   // Orange
+    // Define multiple color stops for more extreme gradient
+    const lightBlue = { r: 180, g: 230, b: 255 };   // Much lighter, more neon blue
+    const darkBlue = { r: 99, g: 102, b: 241 };     // Back to original darker, greyish blue
+    const orange = { r: 255, g: 140, b: 0 };        // Bright orange
+    const brightOrange = { r: 255, g: 165, b: 0 };  // More intense orange
 
-    // Increase the opacity variation range
+    let r, g, b;
+    if (progress < 0.15) {
+        // Quicker transition from light to dark blue in first 15%
+        const localProgress = progress / 0.15;
+        r = lerp(lightBlue.r, darkBlue.r, localProgress);
+        g = lerp(lightBlue.g, darkBlue.g, localProgress);
+        b = lerp(lightBlue.b, darkBlue.b, localProgress);
+    } else if (progress > 0.85) {
+        // Transition to bright orange in last 15%
+        const localProgress = (progress - 0.85) / 0.15;
+        r = lerp(orange.r, brightOrange.r, localProgress);
+        g = lerp(orange.g, brightOrange.g, localProgress);
+        b = lerp(orange.b, brightOrange.b, localProgress);
+    } else {
+        // Main gradient from dark blue to orange
+        const localProgress = (progress - 0.15) / 0.7;
+        r = lerp(darkBlue.r, orange.r, localProgress);
+        g = lerp(darkBlue.g, orange.g, localProgress);
+        b = lerp(darkBlue.b, orange.b, localProgress);
+    }
+
+    // Add color variation
+    const colorVariation = 15;
+    r += (Math.random() * colorVariation - colorVariation / 2);
+    g += (Math.random() * colorVariation - colorVariation / 2);
+    b += (Math.random() * colorVariation - colorVariation / 2);
+
+    // Adjust opacity range
     const baseOpacity = 0.35 + (progress * 0.3);
-    const randomVariation = 0.25; // Increased from 0.15
+    const randomVariation = 0.25;
     const finalOpacity = baseOpacity + (Math.random() * randomVariation - randomVariation / 2);
 
-    // Add slight color variation
-    const colorVariation = 15; // Add some RGB variation
-    const r = Math.round(lerp(startColor.r, endColor.r, progress)) +
-        (Math.random() * colorVariation - colorVariation / 2);
-    const g = Math.round(lerp(startColor.g, endColor.g, progress)) +
-        (Math.random() * colorVariation - colorVariation / 2);
-    const b = Math.round(lerp(startColor.b, endColor.b, progress)) +
-        (Math.random() * colorVariation - colorVariation / 2);
-
-    return `rgba(${Math.max(0, Math.min(255, r))}, 
-                 ${Math.max(0, Math.min(255, g))}, 
-                 ${Math.max(0, Math.min(255, b))}, 
+    return `rgba(${Math.max(0, Math.min(255, Math.round(r)))}, 
+                 ${Math.max(0, Math.min(255, Math.round(g)))}, 
+                 ${Math.max(0, Math.min(255, Math.round(b)))}, 
                  ${Math.max(0.2, Math.min(0.9, finalOpacity))})`;
 };
 
