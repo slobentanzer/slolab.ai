@@ -12,8 +12,42 @@ export default function HeroHome() {
     userAgent: '',
     scrollProgress: 0,
     windowWidth: 0,
-    windowHeight: 0
+    windowHeight: 0,
+    isMobile: false,
+    isIPad: false,
+    pixelRatio: 1
   });
+
+  useEffect(() => {
+    // More detailed device detection
+    const ua = window.navigator.userAgent;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+    const isIPad = /iPad/i.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    setDebugInfo(prev => ({
+      ...prev,
+      mounted: true,
+      userAgent: ua,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      isMobile,
+      isIPad,
+      pixelRatio: window.devicePixelRatio
+    }));
+
+    // Listen for resize events
+    const handleResize = () => {
+      setDebugInfo(prev => ({
+        ...prev,
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight
+      }));
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     setDebugInfo(prev => ({
