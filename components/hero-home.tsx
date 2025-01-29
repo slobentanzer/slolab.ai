@@ -4,26 +4,38 @@ import { useEffect, useRef, useState } from "react";
 import HexAnimation from "./hex-animation";
 
 export default function HeroHome() {
-  const [activeSection, setActiveSection] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const sectionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionsRef.current) return;
 
-      const sections = sectionsRef.current.children;
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      const container = sectionsRef.current;
+      const totalScrollHeight = container.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
 
-      for (let i = 0; i < sections.length; i++) {
-        const section = sections[i] as HTMLElement;
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
+      // Define the sections (4 sections)
+      const sectionHeight = totalScrollHeight / 4;
+      const transitionRange = sectionHeight * 0.2; // Reduced to 20% for shorter transitions
 
-        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-          setActiveSection(i);
-          break;
-        }
+      const currentSection = Math.floor(currentScroll / sectionHeight);
+      const sectionStart = currentSection * sectionHeight;
+      const localProgress = currentScroll - sectionStart;
+
+      let progress;
+      if (localProgress < sectionHeight - transitionRange) {
+        // Stable at beginning of section
+        progress = currentSection * 0.25;
+      } else {
+        // Transition to next section
+        const transitionProgress = (localProgress - (sectionHeight - transitionRange)) / transitionRange;
+        progress = (currentSection * 0.25) + (transitionProgress * 0.25);
       }
+
+      // Ensure progress stays between 0 and 1
+      progress = Math.min(1, Math.max(0, progress));
+      setScrollProgress(progress);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -100,7 +112,7 @@ export default function HeroHome() {
       {/* Right fixed hex animation */}
       <div className="fixed right-0 top-1/2 -translate-y-1/2 w-1/2 h-screen flex items-center justify-center mt-32">
         <div className="w-[600px] h-[600px]">
-          <HexAnimation currentShape={activeSection} />
+          <HexAnimation progress={scrollProgress} />
         </div>
       </div>
     </section>

@@ -143,51 +143,62 @@ const shapes: Shape[] = [
 ];
 
 interface HexAnimationProps {
-    currentShape: number;
+    progress: number; // 0-1 value representing scroll progress
 }
 
-export default function HexAnimation({ currentShape }: HexAnimationProps) {
+export default function HexAnimation({ progress }: HexAnimationProps) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [pixels, setPixels] = useState<HexPixel[]>([]);
+    const [currentPixels, setCurrentPixels] = useState<HexPixel[]>([]);
 
     useEffect(() => {
         const loadPixels = async () => {
-            const currentPixels = typeof shapes[currentShape].pixels === 'function'
-                ? await shapes[currentShape].pixels()
-                : shapes[currentShape].pixels;
-            setPixels(currentPixels);
+            // Determine which two shapes we're between based on progress
+            const shapeIndex = Math.min(Math.floor(progress * shapes.length), shapes.length - 1);
+            const nextShapeIndex = Math.min(shapeIndex + 1, shapes.length - 1);
+
+            // Get the two sets of pixels
+            const currentShapePixels = typeof shapes[shapeIndex].pixels === 'function'
+                ? await shapes[shapeIndex].pixels()
+                : shapes[shapeIndex].pixels;
+
+            const nextShapePixels = typeof shapes[nextShapeIndex].pixels === 'function'
+                ? await shapes[nextShapeIndex].pixels()
+                : shapes[nextShapeIndex].pixels;
+
+            // Calculate local progress between these two shapes
+            const localProgress = (progress * shapes.length) % 1;
+
+            // Interpolate between the two shapes
+            const interpolatedPixels = currentShapePixels.map((pixel, i) => {
+                const nextPixel = nextShapePixels[i] || pixel;
+                return {
+                    id: pixel.id,
+                    x: lerp(pixel.x, nextPixel.x, localProgress),
+                    y: lerp(pixel.y, nextPixel.y, localProgress),
+                    color: pixel.color // We'll keep the color from the current shape for simplicity
+                };
+            });
+
+            setCurrentPixels(interpolatedPixels);
         };
 
         loadPixels();
-    }, [currentShape]);
+    }, [progress]);
 
     return (
         <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
             <div ref={containerRef} className="absolute inset-0 flex items-center justify-center translate-y-[10%]">
-                {pixels.map((pixel) => (
+                {currentPixels.map((pixel) => (
                     <motion.div
                         key={pixel.id}
                         className="absolute hex"
                         style={{
-                            width: "4px",
-                            height: "4px",
+                            width: "5px",
+                            height: "5px",
                             backgroundColor: pixel.color,
+                            transform: `translate(${pixel.x - 200}px, ${pixel.y - 250}px)`,
                         }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{
-                            opacity: 1,
-                            scale: 1,
-                            x: pixel.x - 200,
-                            y: pixel.y - 250,
-                        }}
-                        exit={{ opacity: 0, scale: 0 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 30,
-                            delay: pixel.id * 0.0005,
-                            duration: 0.5,
-                        }}
+                        initial={false}
                     />
                 ))}
             </div>

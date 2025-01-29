@@ -38,9 +38,10 @@
 
     <h3>2. Adjust parameters:</h3>
     <div>
-        Grid Width: <input type="number" id="gridWidth" value="48" />
-        Grid Height: <input type="number" id="gridHeight" value="48" />
+        Grid Width: <input type="number" id="gridWidth" value="45" />
+        Grid Height: <input type="number" id="gridHeight" value="60" />
         Scale: <input type="number" id="scale" value="10" step="0.5" />
+        Target Pixel Count: <input type="number" id="targetPixels" value="512" />
     </div>
 
     <button onclick="convert()">Convert</button>
@@ -56,14 +57,36 @@
             return start * (1 - t) + end * t;
         }
 
+        function getPixelCount(path, gridWidth, gridHeight, scale, hexWidth, hexHeight) {
+            let count = 0;
+            for (let row = 0; row < gridHeight; row++) {
+                for (let col = 0; col < gridWidth; col++) {
+                    const x = col * hexWidth + (row % 2) * (hexWidth / 2);
+                    const y = row * (hexHeight * 0.75);
+
+                    const point = path.ownerSVGElement.createSVGPoint();
+                    point.x = x / scale;
+                    point.y = y / scale;
+
+                    try {
+                        if (path.isPointInFill(point)) {
+                            count++;
+                        }
+                    } catch (error) {
+                        console.error('Error testing point:', error);
+                    }
+                }
+            }
+            return count;
+        }
+
         function convert() {
             const svgContent = document.getElementById('svgInput').value;
             const gridWidth = parseInt(document.getElementById('gridWidth').value);
             const gridHeight = parseInt(document.getElementById('gridHeight').value);
-            const scale = parseFloat(document.getElementById('scale').value);
+            let scale = parseFloat(document.getElementById('scale').value);
+            const targetPixels = parseInt(document.getElementById('targetPixels').value);
 
-            const pixels = [];
-            let id = 1;
             const hexWidth = 5;
             const hexHeight = 4.25;
 
@@ -71,7 +94,7 @@
             const workingSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             workingSvg.setAttribute('width', '100%');
             workingSvg.setAttribute('height', '100%');
-            workingSvg.setAttribute('viewBox', '0 0 23 19');
+            workingSvg.setAttribute('viewBox', '0 0 22 18');
             document.body.appendChild(workingSvg);
 
             // Get the path from original SVG
@@ -86,8 +109,94 @@
 
             // Create working path
             const path = originalPath.cloneNode(true);
-            path.setAttribute('transform', `scale(${scale})`);
             workingSvg.appendChild(path);
+
+            // Binary search to find the right scale
+            let minScale = 0.01;
+            let maxScale = 50;
+            let iterations = 0;
+            const maxIterations = 100;
+            let bestScale = scale;
+            let bestDiff = Infinity;
+            let bestCount = 0;
+            let lastCount = 0;
+
+            while (iterations < maxIterations) {
+                scale = minScale + (maxScale - minScale) * 0.5;
+                scale = Math.round(scale * 100000) / 100000;
+
+                path.setAttribute('transform', `scale(${scale})`);
+                const count = getPixelCount(path, gridWidth, gridHeight, scale, hexWidth, hexHeight);
+
+                console.log(`Iteration ${iterations}: scale=${scale}, count=${count}, target=${targetPixels}`);
+
+                const diff = Math.abs(count - targetPixels);
+                if (diff < bestDiff || (diff === bestDiff && count > bestCount)) {
+                    bestDiff = diff;
+                    bestScale = scale;
+                    bestCount = count;
+                }
+
+                if (count === targetPixels) {
+                    console.log(`Exact match found: scale=${scale}, count=${count}`);
+                    break;
+                }
+
+                // If we're oscillating between two values
+                if (count === lastCount) {
+                    // Try a tiny adjustment
+                    const testScale = scale + 0.00001;
+                    path.setAttribute('transform', `scale(${testScale})`);
+                    const testCount = getPixelCount(path, gridWidth, gridHeight, testScale, hexWidth, hexHeight);
+                    if (testCount === targetPixels || testCount > count) {
+                        scale = testScale;
+                        bestScale = testScale;
+                        bestCount = testCount;
+                        break;
+                    }
+                }
+
+                lastCount = count;
+
+                if (count < targetPixels) {
+                    minScale = scale + 0.00001; // Add tiny increment to avoid getting stuck
+                } else {
+                    maxScale = scale - 0.00001; // Subtract tiny increment to avoid getting stuck
+                }
+
+                // More precise minimum difference check
+                if (maxScale - minScale < 0.00001) {
+                    // Try one final increment if we're under target
+                    if (bestCount < targetPixels) {
+                        const finalScale = bestScale + 0.00001;
+                        path.setAttribute('transform', `scale(${finalScale})`);
+                        const finalCount = getPixelCount(path, gridWidth, gridHeight, finalScale, hexWidth, hexHeight);
+                        if (finalCount === targetPixels || finalCount > bestCount) {
+                            bestScale = finalScale;
+                            bestCount = finalCount;
+                        }
+                    }
+                    console.log('Scale range too small, using best match');
+                    break;
+                }
+
+                iterations++;
+            }
+
+            // Use the best scale found
+            scale = Math.round(bestScale * 100000) / 100000;
+            console.log(`Using best scale found: ${scale}, count: ${bestCount}`);
+
+            // After finding scale, ensure the path is visible
+            console.log('Final transform:', `scale(${scale})`);
+            path.setAttribute('transform', `scale(${scale})`);
+
+            // Update scale input
+            document.getElementById('scale').value = scale;
+
+            // Rest of the original convert function
+            const pixels = [];
+            let id = 1;
 
             // Generate pixels
             for (let row = 0; row < gridHeight; row++) {
@@ -119,7 +228,27 @@
             // Display results
             const preview = document.getElementById('preview');
             preview.innerHTML = '';
-            pixels.forEach(pixel => {
+
+            // Filter and optimize pixels
+            const optimizedPixels = pixels
+                .filter(pixel => {
+                    // Extract alpha value from rgba color string
+                    const alpha = parseFloat(pixel.color.split(',')[3].replace(')', ''));
+                    return alpha >= 0.4; // Keep only pixels with alpha >= 0.4
+                })
+                .map(pixel => ({
+                    ...pixel,
+                    // Round x and y to 1 decimal place
+                    x: Math.round(pixel.x * 10) / 10,
+                    y: Math.round(pixel.y * 10) / 10,
+                    // Round alpha in color to 3 decimal places
+                    color: pixel.color.replace(/\d+\.\d+\)/, match =>
+                        (Math.round(parseFloat(match) * 1000) / 1000) + ')'
+                    )
+                }));
+
+            // Display optimized pixels
+            optimizedPixels.forEach(pixel => {
                 const div = document.createElement('div');
                 div.className = 'hex';
                 div.style.backgroundColor = pixel.color;
@@ -130,7 +259,7 @@
 
             document.getElementById('output').value =
                 'pixels: [\n' +
-                pixels.map(p => `    { id: ${p.id}, x: ${p.x}, y: ${p.y}, color: "${p.color}" }`).join(',\n') +
+                optimizedPixels.map(p => `    { id: ${p.id}, x: ${p.x}, y: ${p.y}, color: "${p.color}" }`).join(',\n') +
                 '\n]';
         }
     </script>
