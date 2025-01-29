@@ -15,22 +15,32 @@ export default function HeroHome() {
       const totalScrollHeight = container.scrollHeight - window.innerHeight;
       const currentScroll = window.scrollY;
 
-      // Define the sections (4 sections)
-      const sectionHeight = totalScrollHeight / 4;
-      const transitionRange = sectionHeight * 0.2; // Reduced to 20% for shorter transitions
-
-      const currentSection = Math.floor(currentScroll / sectionHeight);
-      const sectionStart = currentSection * sectionHeight;
-      const localProgress = currentScroll - sectionStart;
+      // Adjust section distribution - make last section transition happen later
+      // First 3 sections take up 70% of the scroll (0.233 each)
+      // Last section takes up 30% of the scroll
+      const sectionHeight = totalScrollHeight * 0.233; // for first 3 sections
+      const lastSectionStart = totalScrollHeight * 0.7; // start of last section
+      const transitionRange = sectionHeight * 0.2;
 
       let progress;
-      if (localProgress < sectionHeight - transitionRange) {
-        // Stable at beginning of section
-        progress = currentSection * 0.25;
+      if (currentScroll < lastSectionStart) {
+        // Handle first 3 sections
+        const currentSection = Math.floor(currentScroll / sectionHeight);
+        const sectionStart = currentSection * sectionHeight;
+        const localProgress = currentScroll - sectionStart;
+
+        if (localProgress < sectionHeight - transitionRange) {
+          // Stable at beginning of section
+          progress = currentSection * 0.25;
+        } else {
+          // Transition to next section
+          const transitionProgress = (localProgress - (sectionHeight - transitionRange)) / transitionRange;
+          progress = (currentSection * 0.25) + (transitionProgress * 0.25);
+        }
       } else {
-        // Transition to next section
-        const transitionProgress = (localProgress - (sectionHeight - transitionRange)) / transitionRange;
-        progress = (currentSection * 0.25) + (transitionProgress * 0.25);
+        // Handle last section
+        const lastSectionProgress = (currentScroll - lastSectionStart) / (totalScrollHeight - lastSectionStart);
+        progress = 0.75 + (lastSectionProgress * 0.25);
       }
 
       // Ensure progress stays between 0 and 1
@@ -109,10 +119,12 @@ export default function HeroHome() {
         </div>
       </div>
 
-      {/* Right fixed hex animation */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 w-1/2 h-screen flex items-center justify-center mt-32">
-        <div className="w-[600px] h-[600px]">
-          <HexAnimation progress={scrollProgress} />
+      {/* Right hex animation container */}
+      <div className="absolute top-0 right-0 w-1/2 h-[calc(100%-15vh)]">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <div className="w-[600px] h-[600px]">
+            <HexAnimation progress={scrollProgress} />
+          </div>
         </div>
       </div>
     </section>
