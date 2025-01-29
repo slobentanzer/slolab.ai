@@ -16,6 +16,7 @@ interface Shape {
     description: string;
     link: string;
     pixels: (() => Promise<HexPixel[]>) | HexPixel[];
+    direction: GradientDirection;
 }
 
 type GradientDirection =
@@ -66,10 +67,24 @@ const generateColor = (progress: number, opacity: number = 0.5) => {
     const startColor = { r: 99, g: 102, b: 241 }; // Indigo
     const endColor = { r: 249, g: 115, b: 22 };   // Orange
 
-    return `rgba(${Math.round(lerp(startColor.r, endColor.r, progress))}, 
-                 ${Math.round(lerp(startColor.g, endColor.g, progress))}, 
-                 ${Math.round(lerp(startColor.b, endColor.b, progress))}, 
-                 ${opacity})`;
+    // Increase the opacity variation range
+    const baseOpacity = 0.35 + (progress * 0.3);
+    const randomVariation = 0.25; // Increased from 0.15
+    const finalOpacity = baseOpacity + (Math.random() * randomVariation - randomVariation / 2);
+
+    // Add slight color variation
+    const colorVariation = 15; // Add some RGB variation
+    const r = Math.round(lerp(startColor.r, endColor.r, progress)) +
+        (Math.random() * colorVariation - colorVariation / 2);
+    const g = Math.round(lerp(startColor.g, endColor.g, progress)) +
+        (Math.random() * colorVariation - colorVariation / 2);
+    const b = Math.round(lerp(startColor.b, endColor.b, progress)) +
+        (Math.random() * colorVariation - colorVariation / 2);
+
+    return `rgba(${Math.max(0, Math.min(255, r))}, 
+                 ${Math.max(0, Math.min(255, g))}, 
+                 ${Math.max(0, Math.min(255, b))}, 
+                 ${Math.max(0.2, Math.min(0.9, finalOpacity))})`;
 };
 
 const calculateProgress = (normalizedX: number, normalizedY: number, direction: GradientDirection): number => {
@@ -105,20 +120,31 @@ const colorizeCoordinates = (
     const minY = Math.min(...pixels.map(p => p.y));
     const maxY = Math.max(...pixels.map(p => p.y));
 
-    return pixels.map(pixel => {
+    // First pass: calculate progress values
+    const pixelsWithProgress = pixels.map(pixel => {
         const normalizedX = (pixel.x - minX) / (maxX - minX);
         const normalizedY = (pixel.y - minY) / (maxY - minY);
-
         const progress = calculateProgress(normalizedX, normalizedY, direction);
 
         return {
             ...pixel,
+            progress,
+        };
+    });
+
+    // Sort by progress and assign indices
+    const sortedPixels = [...pixelsWithProgress].sort((a, b) => a.progress - b.progress);
+    const totalPixels = sortedPixels.length;
+
+    // Create final pixels with normalized index
+    return sortedPixels.map((pixel, index) => {
+        const normalizedIndex = index / (totalPixels - 1); // 0 to 1
+        return {
+            ...pixel,
             x: pixel.x * scale,
             y: pixel.y * scale,
-            color: generateColor(
-                progress,
-                0.4 + Math.random() * 0.3
-            )
+            color: generateColor(pixel.progress),
+            matchingValue: normalizedIndex // Use the normalized index for matching
         };
     });
 };
@@ -128,6 +154,7 @@ const shapes: Shape[] = [
         name: "Search and Discovery",
         description: "Find and explore relevant information",
         link: "/search",
+        direction: 'bottom-left-to-top-right',
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.searchDiscovery,
             1.2,
@@ -138,16 +165,18 @@ const shapes: Shape[] = [
         name: "Knowledge Graph",
         description: "Connected information network",
         link: "/graph",
+        direction: 'left-to-right',
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.knowledgeGraph,
             1.2,
-            'left-to-right'
+            'top-right-to-bottom-left'
         ))
     },
     {
         name: "Conversational AI",
         description: "Natural language understanding and generation",
         link: "/chat",
+        direction: 'top-left-to-bottom-right',
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.conversationalAi,
             1.2,
@@ -158,10 +187,11 @@ const shapes: Shape[] = [
         name: "Deep Learning",
         description: "Advanced neural network architectures",
         link: "/deep-learning",
+        direction: 'top-to-bottom',
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.deepLearning,
             1.2,
-            'top-to-bottom'
+            'left-to-right'
         ))
     }
 ];
@@ -176,11 +206,9 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
 
     useEffect(() => {
         const loadPixels = async () => {
-            // Determine which two shapes we're between based on progress
             const shapeIndex = Math.min(Math.floor(progress * shapes.length), shapes.length - 1);
             const nextShapeIndex = Math.min(shapeIndex + 1, shapes.length - 1);
 
-            // Get the two sets of pixels
             const currentShapePixels = typeof shapes[shapeIndex].pixels === 'function'
                 ? await shapes[shapeIndex].pixels()
                 : shapes[shapeIndex].pixels;
@@ -189,17 +217,38 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
                 ? await shapes[nextShapeIndex].pixels()
                 : shapes[nextShapeIndex].pixels;
 
-            // Calculate local progress between these two shapes
             const localProgress = (progress * shapes.length) % 1;
 
-            // Interpolate between the two shapes
-            const interpolatedPixels = currentShapePixels.map((pixel, i) => {
-                const nextPixel = nextShapePixels[i] || pixel;
+            const availableNextPixels = [...nextShapePixels];
+            const interpolatedPixels = currentShapePixels.map(currentPixel => {
+                if (availableNextPixels.length === 0) {
+                    return currentPixel;
+                }
+
+                let bestMatchIndex = 0;
+                let bestMatchDiff = Math.abs(
+                    availableNextPixels[0].matchingValue -
+                    currentPixel.matchingValue
+                );
+
+                for (let i = 1; i < availableNextPixels.length; i++) {
+                    const diff = Math.abs(
+                        availableNextPixels[i].matchingValue -
+                        currentPixel.matchingValue
+                    );
+                    if (diff < bestMatchDiff) {
+                        bestMatchDiff = diff;
+                        bestMatchIndex = i;
+                    }
+                }
+
+                const nextPixel = availableNextPixels.splice(bestMatchIndex, 1)[0];
+
                 return {
-                    id: pixel.id,
-                    x: lerp(pixel.x, nextPixel.x, localProgress),
-                    y: lerp(pixel.y, nextPixel.y, localProgress),
-                    color: pixel.color // We'll keep the color from the current shape for simplicity
+                    id: currentPixel.id,
+                    x: lerp(currentPixel.x, nextPixel.x, localProgress),
+                    y: lerp(currentPixel.y, nextPixel.y, localProgress),
+                    color: currentPixel.color
                 };
             });
 
