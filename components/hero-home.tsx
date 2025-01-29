@@ -61,13 +61,13 @@ export default function HeroHome() {
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
-                Search & Discovery
+                Knowledge Extraction
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                Intelligent document search and analysis powered by advanced AI algorithms.
+                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images.
               </p>
               <a href="/search" className="text-indigo-500 hover:text-indigo-400">
-                Learn more about our search capabilities →
+                Python framework coming soon →
               </a>
             </div>
           </div>
@@ -76,13 +76,13 @@ export default function HeroHome() {
           <div className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
-                Knowledge Graph
+                Knowledge Representation
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                Connected information network that reveals hidden relationships and insights.
+                We have created a knowledge graph framework that allows flexible customisation and rapid prototyping via an open-source Python package.
               </p>
-              <a href="/graph" className="text-indigo-500 hover:text-indigo-400">
-                Explore our knowledge graph →
+              <a href="https://biocypher.org" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Find out more about BioCypher →
               </a>
             </div>
           </div>
@@ -94,10 +94,10 @@ export default function HeroHome() {
                 Conversational AI
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                Natural language understanding and generation for human-like interactions.
+                We modernise the way scientists interact with data and knowledge using the recent progress in generative AI in an open-source framework.
               </p>
-              <a href="/chat" className="text-indigo-500 hover:text-indigo-400">
-                Start a conversation →
+              <a href="https://biochatter.org" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Find out more about BioChatter →
               </a>
             </div>
           </div>
@@ -106,13 +106,13 @@ export default function HeroHome() {
           <div className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
-                Deep Learning
+                Understanding Artificial Intelligence
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                Advanced neural network architectures pushing the boundaries of AI.
+                We are examining current AI models and their biases with a focus on the life sciences and causality.
               </p>
-              <a href="/deep-learning" className="text-indigo-500 hover:text-indigo-400">
-                Discover our deep learning models →
+              <a href="https://www.embopress.org/doi/full/10.1038/s44320-024-00041-w" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Read more about our work →
               </a>
             </div>
           </div>
