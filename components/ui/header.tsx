@@ -24,7 +24,7 @@ export default function Header() {
             >
               <span className="text-lg font-medium">Find us on GitHub</span>
               <svg
-                className="h-10 w-10 fill-current"
+                className="h-12 w-12 fill-current"
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
               >

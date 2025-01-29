@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import HexAnimation from "./hex-animation";
+import NeonBackground from "./neon-background";
 
 export default function HeroHome() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -54,6 +55,7 @@ export default function HeroHome() {
 
   return (
     <section className="relative min-h-screen">
+      <NeonBackground />
       {/* Left scrollable content */}
       <div className="w-1/2 pl-36 pr-8">
         <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[50vh]">
@@ -79,10 +81,18 @@ export default function HeroHome() {
                 Knowledge Representation
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                We have created a knowledge graph framework that allows flexible customisation and rapid prototyping via an open-source Python package.
+                We have created a knowledge graph framework that allows flexible customisation and rapid prototyping via an open-source Python package, BioCypher.
               </p>
+              <a href="https://www.nature.com/articles/s41587-023-01848-y" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Read the paper →
+              </a>
+              <br />
               <a href="https://biocypher.org" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
-                Find out more about BioCypher →
+                Read the docs →
+              </a>
+              <br />
+              <a href="https://biocypher.github.io/biocypher-paper/" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Self-archived version of the paper →
               </a>
             </div>
           </div>
@@ -96,8 +106,12 @@ export default function HeroHome() {
               <p className="text-xl text-indigo-200/65 mb-6">
                 We modernise the way scientists interact with data and knowledge using the recent progress in generative AI in an open-source framework.
               </p>
+              <a href="https://www.nature.com/articles/s41587-024-02534-3" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Read the paper →
+              </a>
+              <br />
               <a href="https://biochatter.org" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
-                Find out more about BioChatter →
+                Read the docs →
               </a>
             </div>
           </div>
@@ -127,6 +141,6 @@ export default function HeroHome() {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }

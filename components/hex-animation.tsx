@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { hexCoordinates } from "../data/hex-coordinates/index";
+import { THEME_COLORS } from "../lib/constants/theme";
 
 interface HexPixel {
     id: number;
@@ -63,31 +64,27 @@ const lerp = (start: number, end: number, t: number) => {
 };
 
 const generateColor = (progress: number, opacity: number = 0.5) => {
-    // Define multiple color stops for vibrant gradient
-    const iceBlue = { r: 235, g: 248, b: 255 };        // Almost white blue
-    const electricBlue = { r: 56, g: 189, b: 248 };    // Bright blue
-    const roseMagenta = { r: 194, g: 24, b: 91 };      // #C2185B
-    const hotPink = { r: 219, g: 39, b: 119 };         // Slightly brighter pink edge
+    const { iceBlue, electricBlue, roseMagenta, hotPink } = THEME_COLORS.primary;
 
     let r, g, b;
     if (progress < 0.15) {
         // Transition from ice blue to electric blue in first 15%
         const localProgress = progress / 0.15;
-        r = lerp(iceBlue.r, electricBlue.r, localProgress);
-        g = lerp(iceBlue.g, electricBlue.g, localProgress);
-        b = lerp(iceBlue.b, electricBlue.b, localProgress);
+        r = lerp(iceBlue.rgb.r, electricBlue.rgb.r, localProgress);
+        g = lerp(iceBlue.rgb.g, electricBlue.rgb.g, localProgress);
+        b = lerp(iceBlue.rgb.b, electricBlue.rgb.b, localProgress);
     } else if (progress > 0.85) {
         // Transition to hot pink in last 15%
         const localProgress = (progress - 0.85) / 0.15;
-        r = lerp(roseMagenta.r, hotPink.r, localProgress);
-        g = lerp(roseMagenta.g, hotPink.g, localProgress);
-        b = lerp(roseMagenta.b, hotPink.b, localProgress);
+        r = lerp(roseMagenta.rgb.r, hotPink.rgb.r, localProgress);
+        g = lerp(roseMagenta.rgb.g, hotPink.rgb.g, localProgress);
+        b = lerp(roseMagenta.rgb.b, hotPink.rgb.b, localProgress);
     } else {
         // Main gradient from electric blue to rose magenta
         const localProgress = (progress - 0.15) / 0.7;
-        r = lerp(electricBlue.r, roseMagenta.r, localProgress);
-        g = lerp(electricBlue.g, roseMagenta.g, localProgress);
-        b = lerp(electricBlue.b, roseMagenta.b, localProgress);
+        r = lerp(electricBlue.rgb.r, roseMagenta.rgb.r, localProgress);
+        g = lerp(electricBlue.rgb.g, roseMagenta.rgb.g, localProgress);
+        b = lerp(electricBlue.rgb.b, roseMagenta.rgb.b, localProgress);
     }
 
     // Add color variation for more vibrancy
@@ -96,15 +93,15 @@ const generateColor = (progress: number, opacity: number = 0.5) => {
     g += (Math.random() * colorVariation - colorVariation / 2);
     b += (Math.random() * colorVariation - colorVariation / 2);
 
-    // Increased opacity variation
-    const baseOpacity = 0.5 + (progress * 0.2);  // Lower base opacity
-    const randomVariation = 0.35;                 // Much higher variation
+    // Use theme opacity constants
+    const baseOpacity = THEME_COLORS.opacity.medium + (progress * 0.2);
+    const randomVariation = 0.35;
     const finalOpacity = baseOpacity + (Math.random() * randomVariation - randomVariation / 2);
 
     return `rgba(${Math.max(0, Math.min(255, Math.round(r)))}, 
                  ${Math.max(0, Math.min(255, Math.round(g)))}, 
                  ${Math.max(0, Math.min(255, Math.round(b)))}, 
-                 ${Math.max(0.25, Math.min(0.95, finalOpacity))})`;  // Wider opacity range
+                 ${Math.max(THEME_COLORS.opacity.low, Math.min(THEME_COLORS.opacity.high, finalOpacity))})`;
 };
 
 const calculateProgress = (normalizedX: number, normalizedY: number, direction: GradientDirection): number => {
