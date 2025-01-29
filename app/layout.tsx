@@ -2,6 +2,7 @@ import "./css/style.css";
 
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import Header from "@/components/ui/header";
 
@@ -56,6 +57,7 @@ export default function RootLayout({
         <div className="flex min-h-screen flex-col overflow-hidden supports-[overflow:clip]:overflow-clip">
           <Header />
           {children}
+          <SpeedInsights />
         </div>
       </body>
     </html>
