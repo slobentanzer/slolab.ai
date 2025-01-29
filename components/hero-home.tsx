@@ -46,9 +46,9 @@ export default function HeroHome() {
     <section className="relative min-h-screen">
       {/* Left scrollable content */}
       <div className="w-1/2 pl-16 pr-8">
-        <div ref={sectionsRef} className="space-y-screen pb-screen">
+        <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[50vh]">
           {/* Search Section */}
-          <div className="min-h-screen flex items-center">
+          <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
                 Search & Discovery
@@ -63,7 +63,7 @@ export default function HeroHome() {
           </div>
 
           {/* Graph Section */}
-          <div className="min-h-screen flex items-center">
+          <div className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
                 Knowledge Graph
@@ -78,7 +78,7 @@ export default function HeroHome() {
           </div>
 
           {/* Chat Section */}
-          <div className="min-h-screen flex items-center">
+          <div className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
                 Conversational AI
@@ -93,7 +93,7 @@ export default function HeroHome() {
           </div>
 
           {/* Deep Learning Section */}
-          <div className="min-h-screen flex items-center">
+          <div className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
                 Deep Learning
