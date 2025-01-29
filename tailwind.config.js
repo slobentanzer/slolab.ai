@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
@@ -44,6 +46,20 @@ module.exports = {
           to: { "background-position": "200% center" },
         },
       },
+      colors: {
+        indigo: {
+          50: '#f8f6f8',
+          100: '#f0eaf0',
+          200: '#e2d5e2',
+          300: '#c7b1c7',
+          400: '#ab8cab',
+          500: '#8f6f8f',  // This is your primary highlight color
+          600: '#735873',
+          700: '#5f485f',
+          800: '#4f3d4f',
+          900: '#423442',
+        }
+      }
     },
   },
   plugins: [require("@tailwindcss/forms")],

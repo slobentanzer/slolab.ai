@@ -63,48 +63,48 @@ const lerp = (start: number, end: number, t: number) => {
 };
 
 const generateColor = (progress: number, opacity: number = 0.5) => {
-    // Define multiple color stops for more extreme gradient
-    const lightBlue = { r: 180, g: 230, b: 255 };   // Much lighter, more neon blue
-    const darkBlue = { r: 99, g: 102, b: 241 };     // Back to original darker, greyish blue
-    const orange = { r: 255, g: 140, b: 0 };        // Bright orange
-    const brightOrange = { r: 255, g: 165, b: 0 };  // More intense orange
+    // Define multiple color stops for vibrant gradient
+    const iceBlue = { r: 235, g: 248, b: 255 };        // Almost white blue
+    const electricBlue = { r: 56, g: 189, b: 248 };    // Bright blue
+    const roseMagenta = { r: 194, g: 24, b: 91 };      // #C2185B
+    const hotPink = { r: 219, g: 39, b: 119 };         // Slightly brighter pink edge
 
     let r, g, b;
     if (progress < 0.15) {
-        // Quicker transition from light to dark blue in first 15%
+        // Transition from ice blue to electric blue in first 15%
         const localProgress = progress / 0.15;
-        r = lerp(lightBlue.r, darkBlue.r, localProgress);
-        g = lerp(lightBlue.g, darkBlue.g, localProgress);
-        b = lerp(lightBlue.b, darkBlue.b, localProgress);
+        r = lerp(iceBlue.r, electricBlue.r, localProgress);
+        g = lerp(iceBlue.g, electricBlue.g, localProgress);
+        b = lerp(iceBlue.b, electricBlue.b, localProgress);
     } else if (progress > 0.85) {
-        // Transition to bright orange in last 15%
+        // Transition to hot pink in last 15%
         const localProgress = (progress - 0.85) / 0.15;
-        r = lerp(orange.r, brightOrange.r, localProgress);
-        g = lerp(orange.g, brightOrange.g, localProgress);
-        b = lerp(orange.b, brightOrange.b, localProgress);
+        r = lerp(roseMagenta.r, hotPink.r, localProgress);
+        g = lerp(roseMagenta.g, hotPink.g, localProgress);
+        b = lerp(roseMagenta.b, hotPink.b, localProgress);
     } else {
-        // Main gradient from dark blue to orange
+        // Main gradient from electric blue to rose magenta
         const localProgress = (progress - 0.15) / 0.7;
-        r = lerp(darkBlue.r, orange.r, localProgress);
-        g = lerp(darkBlue.g, orange.g, localProgress);
-        b = lerp(darkBlue.b, orange.b, localProgress);
+        r = lerp(electricBlue.r, roseMagenta.r, localProgress);
+        g = lerp(electricBlue.g, roseMagenta.g, localProgress);
+        b = lerp(electricBlue.b, roseMagenta.b, localProgress);
     }
 
-    // Add color variation
-    const colorVariation = 15;
+    // Add color variation for more vibrancy
+    const colorVariation = 20;
     r += (Math.random() * colorVariation - colorVariation / 2);
     g += (Math.random() * colorVariation - colorVariation / 2);
     b += (Math.random() * colorVariation - colorVariation / 2);
 
-    // Adjust opacity range
-    const baseOpacity = 0.35 + (progress * 0.3);
-    const randomVariation = 0.25;
+    // Increased opacity variation
+    const baseOpacity = 0.5 + (progress * 0.2);  // Lower base opacity
+    const randomVariation = 0.35;                 // Much higher variation
     const finalOpacity = baseOpacity + (Math.random() * randomVariation - randomVariation / 2);
 
     return `rgba(${Math.max(0, Math.min(255, Math.round(r)))}, 
                  ${Math.max(0, Math.min(255, Math.round(g)))}, 
                  ${Math.max(0, Math.min(255, Math.round(b)))}, 
-                 ${Math.max(0.2, Math.min(0.9, finalOpacity))})`;
+                 ${Math.max(0.25, Math.min(0.95, finalOpacity))})`;  // Wider opacity range
 };
 
 const calculateProgress = (normalizedX: number, normalizedY: number, direction: GradientDirection): number => {
