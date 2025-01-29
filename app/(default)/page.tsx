@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "AI Platform",
-  description: "AI-powered solutions for the future",
+  title: "SLOLAB",
+  description: "Accessible Biomedical AI Research",
 };
 
 import Hero from "@/components/hero-home";
