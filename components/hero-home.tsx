@@ -57,14 +57,14 @@ export default function HeroHome() {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
-      const offset = 350; // Adjust this value to control how far above the element to stop
+      const offset = 250; // Adjust this value to control how far above the element to stop
       const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
       const startPosition = window.scrollY;
       const distance = elementPosition - startPosition;
       const duration = 500;
       let start: number;
 
-      function animation(currentTime: number) {
+      const animation = (currentTime: number) => {
         if (!start) start = currentTime;
         const timeElapsed = currentTime - start;
         const progress = Math.min(timeElapsed / duration, 1);
@@ -79,7 +79,7 @@ export default function HeroHome() {
         if (timeElapsed < duration) {
           requestAnimationFrame(animation);
         }
-      }
+      };
 
       requestAnimationFrame(animation);
     }
