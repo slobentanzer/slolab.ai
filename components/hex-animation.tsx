@@ -18,6 +18,8 @@ interface Shape {
     pixels: (() => Promise<HexPixel[]>) | HexPixel[];
 }
 
+type GradientDirection = 'bottom-left-to-top-right' | 'top-left-to-bottom-right' | 'left-to-right' | 'bottom-to-top';
+
 // Helper function to generate a grid of hex pixels
 const generateHexGrid = (startX: number, startY: number, rows: number, cols: number, colorStart: string, colorEnd: string): HexPixel[] => {
     const pixels: HexPixel[] = [];
@@ -51,12 +53,58 @@ const lerp = (start: number, end: number, t: number) => {
     return start * (1 - t) + end * t;
 };
 
-const scaleCoordinates = (pixels: HexPixel[], scale: number = 1.2): HexPixel[] => {
-    return pixels.map(pixel => ({
-        ...pixel,
-        x: pixel.x * scale,
-        y: pixel.y * scale
-    }));
+const generateColor = (progress: number, opacity: number = 0.5) => {
+    // You can adjust these RGB values to change the gradient colors
+    const startColor = { r: 99, g: 102, b: 241 }; // Indigo
+    const endColor = { r: 249, g: 115, b: 22 };   // Orange
+
+    return `rgba(${Math.round(lerp(startColor.r, endColor.r, progress))}, 
+                 ${Math.round(lerp(startColor.g, endColor.g, progress))}, 
+                 ${Math.round(lerp(startColor.b, endColor.b, progress))}, 
+                 ${opacity})`;
+};
+
+const calculateProgress = (normalizedX: number, normalizedY: number, direction: GradientDirection): number => {
+    switch (direction) {
+        case 'bottom-left-to-top-right':
+            return (normalizedX + (1 - normalizedY)) / 2;
+        case 'top-left-to-bottom-right':
+            return (normalizedX + normalizedY) / 2;
+        case 'left-to-right':
+            return normalizedX;
+        case 'bottom-to-top':
+            return 1 - normalizedY;
+        default:
+            return normalizedX; // default to left-to-right
+    }
+};
+
+const colorizeCoordinates = (
+    pixels: HexPixel[],
+    scale: number = 1.2,
+    direction: GradientDirection = 'bottom-left-to-top-right'
+): HexPixel[] => {
+    const minX = Math.min(...pixels.map(p => p.x));
+    const maxX = Math.max(...pixels.map(p => p.x));
+    const minY = Math.min(...pixels.map(p => p.y));
+    const maxY = Math.max(...pixels.map(p => p.y));
+
+    return pixels.map(pixel => {
+        const normalizedX = (pixel.x - minX) / (maxX - minX);
+        const normalizedY = (pixel.y - minY) / (maxY - minY);
+
+        const progress = calculateProgress(normalizedX, normalizedY, direction);
+
+        return {
+            ...pixel,
+            x: pixel.x * scale,
+            y: pixel.y * scale,
+            color: generateColor(
+                progress,
+                0.4 + Math.random() * 0.3
+            )
+        };
+    });
 };
 
 const shapes: Shape[] = [
@@ -64,13 +112,21 @@ const shapes: Shape[] = [
         name: "Search and Discovery",
         description: "Find and explore relevant information",
         link: "/search",
-        pixels: () => Promise.resolve(scaleCoordinates(hexCoordinates.searchDiscovery))
+        pixels: () => Promise.resolve(colorizeCoordinates(
+            hexCoordinates.searchDiscovery,
+            1.2,
+            'bottom-left-to-top-right'
+        ))
     },
     {
         name: "Knowledge Graph",
         description: "Connected information network",
         link: "/graph",
-        pixels: generateHexGrid(150, 50, 80, 100, "rgba(99, 102, 241, 0.4)", "rgba(249, 115, 22, 0.4)")
+        pixels: () => Promise.resolve(colorizeCoordinates(
+            hexCoordinates.knowledgeGraph,
+            1.2,
+            'bottom-left-to-top-right'
+        ))
     },
     {
         name: "Conversational AI",
