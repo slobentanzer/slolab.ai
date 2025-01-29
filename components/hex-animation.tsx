@@ -18,7 +18,15 @@ interface Shape {
     pixels: (() => Promise<HexPixel[]>) | HexPixel[];
 }
 
-type GradientDirection = 'bottom-left-to-top-right' | 'top-left-to-bottom-right' | 'left-to-right' | 'bottom-to-top';
+type GradientDirection =
+    'bottom-left-to-top-right' |
+    'top-left-to-bottom-right' |
+    'left-to-right' |
+    'bottom-to-top' |
+    'right-to-left' |
+    'top-to-bottom' |
+    'top-right-to-bottom-left' |
+    'bottom-right-to-top-left';
 
 // Helper function to generate a grid of hex pixels
 const generateHexGrid = (startX: number, startY: number, rows: number, cols: number, colorStart: string, colorEnd: string): HexPixel[] => {
@@ -72,8 +80,16 @@ const calculateProgress = (normalizedX: number, normalizedY: number, direction: 
             return (normalizedX + normalizedY) / 2;
         case 'left-to-right':
             return normalizedX;
+        case 'right-to-left':
+            return 1 - normalizedX;
         case 'bottom-to-top':
             return 1 - normalizedY;
+        case 'top-to-bottom':
+            return normalizedY;
+        case 'top-right-to-bottom-left':
+            return ((1 - normalizedX) + normalizedY) / 2;
+        case 'bottom-right-to-top-left':
+            return ((1 - normalizedX) + (1 - normalizedY)) / 2;
         default:
             return normalizedX; // default to left-to-right
     }
@@ -125,7 +141,7 @@ const shapes: Shape[] = [
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.knowledgeGraph,
             1.2,
-            'top-left-to-bottom-right'
+            'left-to-right'
         ))
     },
     {
@@ -135,7 +151,7 @@ const shapes: Shape[] = [
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.conversationalAi,
             1.2,
-            'left-to-right'
+            'top-left-to-bottom-right'
         ))
     },
     {
@@ -145,7 +161,7 @@ const shapes: Shape[] = [
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.deepLearning,
             1.2,
-            'bottom-to-top'
+            'top-to-bottom'
         ))
     }
 ];

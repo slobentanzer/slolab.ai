@@ -20,7 +20,7 @@ export default function HeroHome() {
       // Last section takes up 15% of the scroll
       const sectionHeight = totalScrollHeight * 0.283; // for first 3 sections
       const lastSectionStart = totalScrollHeight * 0.85; // start of last section
-      const transitionRange = sectionHeight * 0.6; // increased from 0.2 to 0.5
+      const transitionRange = sectionHeight * 0.6;
 
       let progress;
       if (currentScroll < lastSectionStart) {
