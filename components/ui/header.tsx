@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <header className="z-30 mt-2 w-full md:mt-5">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="relative flex h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/[0.02] px-12 backdrop-blur-[1px] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,rgb(236,72,153,0.01),theme(colors.gray.800/2),rgb(236,72,153,0.01))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
+        <div className="relative flex h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/[0.2] px-12 backdrop-blur-[1px] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,rgb(236,72,153,0.01),theme(colors.gray.800/2),rgb(236,72,153,0.01))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
           {/* Site branding */}
           <div className="flex flex-1 items-center">
             <Logo />
