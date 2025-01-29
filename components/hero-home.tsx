@@ -7,8 +7,23 @@ import NeonBackground from "./neon-background";
 export default function HeroHome() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const sectionsRef = useRef<HTMLDivElement>(null);
+  const [debugInfo, setDebugInfo] = useState({
+    mounted: false,
+    userAgent: '',
+    scrollProgress: 0,
+    windowWidth: 0,
+    windowHeight: 0
+  });
 
   useEffect(() => {
+    setDebugInfo(prev => ({
+      ...prev,
+      mounted: true,
+      userAgent: window.navigator.userAgent,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight
+    }));
+
     const handleScroll = () => {
       if (!sectionsRef.current) return;
 
@@ -87,6 +102,11 @@ export default function HeroHome() {
 
   return (
     <section className="relative min-h-screen scroll-smooth">
+      {/* Debug overlay */}
+      <div className="fixed top-0 right-0 text-xs text-white/30 bg-black/20 p-1 z-[9999]">
+        HERO DEBUG: {JSON.stringify(debugInfo, null, 2)}
+      </div>
+
       {/* Centered introduction text */}
       <div className="absolute top-0 left-0 right-0 text-center px-4 pt-16 xs:pt-8">
         <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-32">
@@ -98,6 +118,10 @@ export default function HeroHome() {
       {/* Right hex animation container - now positioned behind text on mobile */}
       <div className="absolute top-96 lg:top-0 left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-23vh)] -z-10 lg:z-0">
         <div className="sticky top-0 h-screen flex items-center justify-center">
+          {/* Additional debug element */}
+          <div className="absolute top-20 right-0 text-xs text-white/30 bg-black/20 p-1 z-[9999]">
+            HEX CONTAINER: Progress = {scrollProgress}
+          </div>
           <div className="w-[600px] h-[600px]">
             <HexAnimation progress={scrollProgress} />
           </div>

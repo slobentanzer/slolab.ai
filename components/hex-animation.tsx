@@ -221,21 +221,8 @@ interface HexAnimationProps {
 export default function HexAnimation({ progress }: HexAnimationProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [currentPixels, setCurrentPixels] = useState<HexPixel[]>([]);
-    const [debugInfo, setDebugInfo] = useState({
-        mounted: false,
-        pixelsLoaded: 0,
-        lastProgress: progress,
-        error: null as any,
-        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR'
-    });
 
     useEffect(() => {
-        setDebugInfo(prev => ({ ...prev, mounted: true }));
-    }, []);
-
-    useEffect(() => {
-        setDebugInfo(prev => ({ ...prev, mounted: true }));
-
         const loadPixels = async () => {
             try {
                 const shapeIndex = Math.min(Math.floor(progress * shapes.length), shapes.length - 1);
@@ -285,13 +272,8 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
                 });
 
                 setCurrentPixels(interpolatedPixels);
-                setDebugInfo(prev => ({
-                    ...prev,
-                    pixelsLoaded: interpolatedPixels.length,
-                    lastProgress: progress
-                }));
             } catch (error) {
-                setDebugInfo(prev => ({ ...prev, error }));
+                console.error('Error loading pixels:', error);
             }
         };
 
@@ -299,42 +281,25 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
     }, [progress]);
 
     return (
-        <>
-            {/* Debug Layer 1 - Outside everything */}
-            <div className="fixed top-0 left-0 text-xs text-red-500 bg-black/20 p-1" style={{ zIndex: 9999 }}>
-                OUTER DEBUG
+        <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
+            <div
+                ref={containerRef}
+                className="absolute inset-0 flex items-center justify-center translate-y-[10%]"
+            >
+                {currentPixels.map((pixel) => (
+                    <motion.div
+                        key={pixel.id}
+                        className="absolute hex"
+                        style={{
+                            width: "5px",
+                            height: "5px",
+                            backgroundColor: pixel.color,
+                            transform: `translate(${pixel.x - 200}px, ${pixel.y - 250}px)`,
+                        }}
+                        initial={false}
+                    />
+                ))}
             </div>
-
-            <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
-                {/* Debug Layer 2 - Inside first container */}
-                <div className="absolute top-5 left-0 text-xs text-green-500 bg-black/20 p-1" style={{ zIndex: 9999 }}>
-                    MIDDLE DEBUG: {JSON.stringify(debugInfo, null, 2)}
-                </div>
-
-                <div
-                    ref={containerRef}
-                    className="absolute inset-0 flex items-center justify-center translate-y-[10%]"
-                >
-                    {/* Debug Layer 3 - Inside hex container */}
-                    <div className="absolute top-10 left-0 text-xs text-blue-500 bg-black/20 p-1" style={{ zIndex: 9999 }}>
-                        INNER DEBUG: {currentPixels.length} pixels
-                    </div>
-
-                    {currentPixels.map((pixel) => (
-                        <motion.div
-                            key={pixel.id}
-                            className="absolute hex"
-                            style={{
-                                width: "5px",
-                                height: "5px",
-                                backgroundColor: pixel.color,
-                                transform: `translate(${pixel.x - 200}px, ${pixel.y - 250}px)`,
-                            }}
-                            initial={false}
-                        />
-                    ))}
-                </div>
-            </div>
-        </>
+        </div>
     );
 } 
