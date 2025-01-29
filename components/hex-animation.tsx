@@ -221,56 +221,73 @@ interface HexAnimationProps {
 export default function HexAnimation({ progress }: HexAnimationProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [currentPixels, setCurrentPixels] = useState<HexPixel[]>([]);
+    const [debugInfo, setDebugInfo] = useState({
+        mounted: false,
+        pixelsLoaded: 0,
+        lastProgress: 0,
+        error: null as any
+    });
 
     useEffect(() => {
+        setDebugInfo(prev => ({ ...prev, mounted: true }));
+
         const loadPixels = async () => {
-            const shapeIndex = Math.min(Math.floor(progress * shapes.length), shapes.length - 1);
-            const nextShapeIndex = Math.min(shapeIndex + 1, shapes.length - 1);
+            try {
+                const shapeIndex = Math.min(Math.floor(progress * shapes.length), shapes.length - 1);
+                const nextShapeIndex = Math.min(shapeIndex + 1, shapes.length - 1);
 
-            const currentShapePixels = typeof shapes[shapeIndex].pixels === 'function'
-                ? await shapes[shapeIndex].pixels()
-                : shapes[shapeIndex].pixels;
+                const currentShapePixels = typeof shapes[shapeIndex].pixels === 'function'
+                    ? await shapes[shapeIndex].pixels()
+                    : shapes[shapeIndex].pixels;
 
-            const nextShapePixels = typeof shapes[nextShapeIndex].pixels === 'function'
-                ? await shapes[nextShapeIndex].pixels()
-                : shapes[nextShapeIndex].pixels;
+                const nextShapePixels = typeof shapes[nextShapeIndex].pixels === 'function'
+                    ? await shapes[nextShapeIndex].pixels()
+                    : shapes[nextShapeIndex].pixels;
 
-            const localProgress = (progress * shapes.length) % 1;
+                const localProgress = (progress * shapes.length) % 1;
 
-            const availableNextPixels = [...nextShapePixels];
-            const interpolatedPixels = currentShapePixels.map(currentPixel => {
-                if (availableNextPixels.length === 0) {
-                    return currentPixel;
-                }
+                const availableNextPixels = [...nextShapePixels];
+                const interpolatedPixels = currentShapePixels.map(currentPixel => {
+                    if (availableNextPixels.length === 0) {
+                        return currentPixel;
+                    }
 
-                let bestMatchIndex = 0;
-                let bestMatchDiff = Math.abs(
-                    (availableNextPixels[0].matchingValue ?? 0) -
-                    (currentPixel.matchingValue ?? 0)
-                );
-
-                for (let i = 1; i < availableNextPixels.length; i++) {
-                    const diff = Math.abs(
-                        (availableNextPixels[i].matchingValue ?? 0) -
+                    let bestMatchIndex = 0;
+                    let bestMatchDiff = Math.abs(
+                        (availableNextPixels[0].matchingValue ?? 0) -
                         (currentPixel.matchingValue ?? 0)
                     );
-                    if (diff < bestMatchDiff) {
-                        bestMatchDiff = diff;
-                        bestMatchIndex = i;
+
+                    for (let i = 1; i < availableNextPixels.length; i++) {
+                        const diff = Math.abs(
+                            (availableNextPixels[i].matchingValue ?? 0) -
+                            (currentPixel.matchingValue ?? 0)
+                        );
+                        if (diff < bestMatchDiff) {
+                            bestMatchDiff = diff;
+                            bestMatchIndex = i;
+                        }
                     }
-                }
 
-                const nextPixel = availableNextPixels.splice(bestMatchIndex, 1)[0];
+                    const nextPixel = availableNextPixels.splice(bestMatchIndex, 1)[0];
 
-                return {
-                    id: currentPixel.id,
-                    x: lerp(currentPixel.x, nextPixel.x, localProgress),
-                    y: lerp(currentPixel.y, nextPixel.y, localProgress),
-                    color: currentPixel.color
-                };
-            });
+                    return {
+                        id: currentPixel.id,
+                        x: lerp(currentPixel.x, nextPixel.x, localProgress),
+                        y: lerp(currentPixel.y, nextPixel.y, localProgress),
+                        color: currentPixel.color
+                    };
+                });
 
-            setCurrentPixels(interpolatedPixels);
+                setCurrentPixels(interpolatedPixels);
+                setDebugInfo(prev => ({
+                    ...prev,
+                    pixelsLoaded: interpolatedPixels.length,
+                    lastProgress: progress
+                }));
+            } catch (error) {
+                setDebugInfo(prev => ({ ...prev, error }));
+            }
         };
 
         loadPixels();
@@ -278,7 +295,17 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
 
     return (
         <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
-            <div ref={containerRef} className="absolute inset-0 flex items-center justify-center translate-y-[10%]">
+            {/* Debug info - visible in both dev and prod */}
+            <div
+                className="absolute top-0 left-0 text-xs text-white/30 bg-black/20 p-1 pointer-events-none"
+                style={{ zIndex: 9999 }}
+            >
+                DEBUG: {JSON.stringify(debugInfo, null, 2)}
+            </div>
+            <div
+                ref={containerRef}
+                className="absolute inset-0 flex items-center justify-center translate-y-[10%]"
+            >
                 {currentPixels.map((pixel) => (
                     <motion.div
                         key={pixel.id}
