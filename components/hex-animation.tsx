@@ -169,7 +169,7 @@ const shapes: Shape[] = [
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.knowledgeGraph,
             1.2,
-            'top-right-to-bottom-left'
+            'top-left-to-bottom-right'
         ))
     },
     {
@@ -180,7 +180,7 @@ const shapes: Shape[] = [
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.conversationalAi,
             1.2,
-            'top-left-to-bottom-right'
+            'top-right-to-bottom-left'
         ))
     },
     {
