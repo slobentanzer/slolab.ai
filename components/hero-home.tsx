@@ -61,7 +61,7 @@ export default function HeroHome() {
       const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
       const startPosition = window.scrollY;
       const distance = elementPosition - startPosition;
-      const duration = 500;
+      const duration = 1200;
       let start: number;
 
       const animation = (currentTime: number) => {
@@ -69,10 +69,10 @@ export default function HeroHome() {
         const timeElapsed = currentTime - start;
         const progress = Math.min(timeElapsed / duration, 1);
 
-        // Easing function for smoother animation
-        const ease = (t: number) => t < 0.5
-          ? 4 * t * t * t
-          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        // Simple sine-based easing function - slower in middle, no oscillation
+        const ease = (t: number) => {
+          return 0.5 - Math.cos(Math.PI * t) / 2;
+        };
 
         window.scrollTo(0, startPosition + (distance * ease(progress)));
 
