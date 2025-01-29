@@ -16,11 +16,11 @@ export default function HeroHome() {
       const currentScroll = window.scrollY;
 
       // Adjust section distribution - make last section transition happen later
-      // First 3 sections take up 70% of the scroll (0.233 each)
-      // Last section takes up 30% of the scroll
-      const sectionHeight = totalScrollHeight * 0.233; // for first 3 sections
-      const lastSectionStart = totalScrollHeight * 0.7; // start of last section
-      const transitionRange = sectionHeight * 0.2;
+      // First 3 sections take up 85% of the scroll (0.283 each)
+      // Last section takes up 15% of the scroll
+      const sectionHeight = totalScrollHeight * 0.283; // for first 3 sections
+      const lastSectionStart = totalScrollHeight * 0.85; // start of last section
+      const transitionRange = sectionHeight * 0.6; // increased from 0.2 to 0.5
 
       let progress;
       if (currentScroll < lastSectionStart) {
