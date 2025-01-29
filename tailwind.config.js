@@ -59,7 +59,10 @@ module.exports = {
           800: '#4f3d4f',
           900: '#423442',
         }
-      }
+      },
+      screens: {
+        'xs': { 'max': '400px' },
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

@@ -89,7 +89,7 @@ export default function HeroHome() {
     <section className="relative min-h-screen scroll-smooth">
       {/* Centered introduction text */}
       <div className="absolute top-0 left-0 right-0 text-center px-4 pt-16">
-        <p className="text-xl text-indigo-200/65 max-w-3xl mx-auto">
+        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-32">
           Welcome to the lab website of Sebastian Lobentanzer's group at Helmholtz Munich. We develop open-source software solutions for biomedical research. Discover our focus areas by scrolling down. 👇
         </p>
       </div>
