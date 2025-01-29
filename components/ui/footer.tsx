@@ -21,6 +21,15 @@ export default function Footer() {
                 >
                   Contact: slobentanzer.github.io
                 </a>
+                <span className="text-gray-700"> · </span>
+                <a
+                  href="https://biocypher.zulipchat.com"
+                  className="hover:text-indigo-200"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Join the community
+                </a>
               </p>
             </div>
           </div>
