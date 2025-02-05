@@ -7,6 +7,7 @@ import Logo from "./ui/logo";
 import { colorizeCoordinates } from "../lib/utils/hex-utils";
 import { THEME_COLORS } from "../lib/constants/theme";
 import NeonBackground from "./neon-background";
+import { HexPixel } from "../lib/types/hex";
 
 // Create a seeded random number generator for consistent values
 const seededRandom = (seed: number) => {
@@ -62,13 +63,8 @@ const lerp = (start: number, end: number, t: number) => {
     return start * (1 - t) + end * t;
 };
 
-interface Pixel {
-    id: number;
-    x: number;
-    y: number;
+interface Pixel extends HexPixel {
     pattern: string;
-    color: string;
-    progress?: number;
 }
 
 interface PixelGroups {
@@ -102,24 +98,24 @@ export default function Banner() {
                     x: (p.x * scale) + 200,
                     y: (p.y * scale) + 200,
                     pattern: 'search',
-                    color: generateColor(p.progress || 0.5, p.id)
+                    color: generateColor(p.matchingValue || 0.5, p.id)
                 })),
                 graph: graphPixels.map(p => ({
                     ...p,
                     x: (p.x * scale) + 510,
                     y: (p.y * scale) + 200,
                     pattern: 'graph',
-                    color: generateColor(p.progress || 0.5, p.id + 10000)
+                    color: generateColor(p.matchingValue || 0.5, p.id + 10000)
                 })),
                 ai: aiPixels.map(p => ({
                     ...p,
                     x: (p.x * scale) + 900,
                     y: (p.y * scale) + 200,
                     pattern: 'ai',
-                    color: generateColor(p.progress || 0.5, p.id + 20000)
+                    color: generateColor(p.matchingValue || 0.5, p.id + 20000)
                 })),
                 dl: dlPixels.map(p => {
-                    // Ensure progress is strictly based on x-position for dl pattern
+                    // Ensure matchingValue is strictly based on x-position for dl pattern
                     const minX = Math.min(...dlPixels.map(dp => dp.x));
                     const maxX = Math.max(...dlPixels.map(dp => dp.x));
                     const normalizedProgress = (p.x - minX) / (maxX - minX);

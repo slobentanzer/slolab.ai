@@ -4,32 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { hexCoordinates } from "../data/hex-coordinates/index";
 import { THEME_COLORS } from "../lib/constants/theme";
-
-interface HexPixel {
-    id: number;
-    x: number;
-    y: number;
-    color: string;
-    matchingValue?: number;
-}
-
-interface Shape {
-    name: string;
-    description: string;
-    link: string;
-    pixels: (() => Promise<HexPixel[]>) | HexPixel[];
-    direction: GradientDirection;
-}
-
-type GradientDirection =
-    'bottom-left-to-top-right' |
-    'top-left-to-bottom-right' |
-    'left-to-right' |
-    'bottom-to-top' |
-    'right-to-left' |
-    'top-to-bottom' |
-    'top-right-to-bottom-left' |
-    'bottom-right-to-top-left';
+import { HexPixel, Shape, GradientDirection } from "../lib/types/hex";
 
 // Helper function to generate a grid of hex pixels
 const generateHexGrid = (startX: number, startY: number, rows: number, cols: number, colorStart: string, colorEnd: string): HexPixel[] => {
