@@ -1,13 +1,5 @@
 import { THEME_COLORS } from "../constants/theme";
-import { HexPixel, GradientDirection } from "../types/hex";
-
-interface HexPixel {
-    id: number;
-    x: number;
-    y: number;
-    color: string;
-    matchingValue?: number;
-}
+import { HexPixel, GradientDirection } from "../types";
 
 const calculateProgress = (normalizedX: number, normalizedY: number, direction: GradientDirection): number => {
     switch (direction) {
