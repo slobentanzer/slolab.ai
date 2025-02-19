@@ -25,7 +25,7 @@ export default function People() {
                             <h2 className="text-2xl font-semibold text-gray-200 mb-6">How to Apply</h2>
                             <div className="space-y-6 text-indigo-200/65">
                                 <p>
-                                    For all positions, candidates should email their application to sebastian.lobentanzer[at]helmholtz-muenchen.de, including:
+                                    For all positions, candidates should email their application to sebastian.lobentanzer[at]helmholtz-munich.de, including:
                                 </p>
                                 <ul className="list-disc list-inside space-y-2 ml-4">
                                     <li>CV</li>
@@ -131,9 +131,6 @@ export default function People() {
                                     <div>
                                         <h3 className="text-xl font-semibold text-gray-200 mb-2">Location</h3>
                                         <p>Munich, with its numerous lakes and proximity to the Alps, is considered one of the cities offering the best quality of life worldwide. Its first-class universities and world-leading research institutions provide an intellectually stimulating environment.</p>
-                                    </div>
-                                    <div>
-                                        <p className="mt-4">This position provides the opportunity to build specialist knowledge and gain significant professional experience to advance your scientific career. The position is initially limited to three years, with potential extension depending on the project and performance.</p>
                                     </div>
                                 </div>
                             </div>
