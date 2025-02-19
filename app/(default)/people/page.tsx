@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export const metadata = {
     title: 'Join Us',
-    description: 'Join our team at Helmholtz Munich. We have positions available for postdoctoral fellows, PhD students, and students (HiWi, Bachelor, Master, Internship).',
+    description: 'Join our team at Helmholtz Munich. We have positions available for postdoctoral fellows, PhD candidates, and students (HiWi, Bachelor, Master, Internship).',
 }
 
 export default function People() {
@@ -48,7 +48,7 @@ export default function People() {
                                 </p>
                                 <ul className="list-disc list-inside ml-4">
                                     <li>Postdoctoral fellows</li>
-                                    <li>PhD students</li>
+                                    <li>PhD candidates</li>
                                     <li>Student assistants (HiWi)</li>
                                     <li>Master thesis</li>
                                     <li>Bachelor thesis</li>

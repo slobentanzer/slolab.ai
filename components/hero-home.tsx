@@ -216,7 +216,7 @@ export default function HeroHome() {
           <div id="people" className="min-h-[50vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
-                Join us
+                Join Us
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
                 We are always looking for talented and motivated individuals to join our team.
