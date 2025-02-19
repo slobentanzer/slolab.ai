@@ -16,32 +16,35 @@ export default function HeroHome() {
       const totalScrollHeight = container.scrollHeight - window.innerHeight;
       const currentScroll = window.scrollY;
 
-      // Adjust section distribution - make last section transition happen later
-      // First 3 sections take up 85% of the scroll (0.283 each)
-      // Last section takes up 15% of the scroll
-      const sectionHeight = totalScrollHeight * 0.283; // for first 3 sections
-      const lastSectionStart = totalScrollHeight * 0.85; // start of last section
-      const transitionRange = sectionHeight * 0.6;
+      // Define where each logo should be fully visible (in scroll percentage)
+      const logoRegions = [
+        { start: 0, end: 5 },    // Extraction logo
+        { start: 22, end: 27 },   // Representation logo
+        { start: 45, end: 52 },   // Chat logo
+        { start: 69, end: 75 },   // AI logo
+        { start: 90, end: 100 }   // People logo
+      ];
 
-      let progress;
-      if (currentScroll < lastSectionStart) {
-        // Handle first 3 sections
-        const currentSection = Math.floor(currentScroll / sectionHeight);
-        const sectionStart = currentSection * sectionHeight;
-        const localProgress = currentScroll - sectionStart;
+      // Convert current scroll to 0-100 scale
+      const scrollPercentage = (currentScroll / totalScrollHeight) * 100;
 
-        if (localProgress < sectionHeight - transitionRange) {
-          // Stable at beginning of section
-          progress = currentSection * 0.25;
-        } else {
-          // Transition to next section
-          const transitionProgress = (localProgress - (sectionHeight - transitionRange)) / transitionRange;
-          progress = (currentSection * 0.25) + (transitionProgress * 0.25);
+      // Find which region or transition we're in
+      let progress = 0;
+      for (let i = 0; i < logoRegions.length; i++) {
+        const currentRegion = logoRegions[i];
+        const nextRegion = logoRegions[i + 1];
+
+        if (scrollPercentage <= currentRegion.end) {
+          // In this region - show this logo
+          progress = i * 0.2;
+          break;
+        } else if (!nextRegion || scrollPercentage < nextRegion.start) {
+          // In transition to next region
+          const transitionLength = (nextRegion ? nextRegion.start : 100) - currentRegion.end;
+          const transitionProgress = (scrollPercentage - currentRegion.end) / transitionLength;
+          progress = (i + transitionProgress) * 0.2;
+          break;
         }
-      } else {
-        // Handle last section
-        const lastSectionProgress = (currentScroll - lastSectionStart) / (totalScrollHeight - lastSectionStart);
-        progress = 0.75 + (lastSectionProgress * 0.25);
       }
 
       // Ensure progress stays between 0 and 1
@@ -106,7 +109,7 @@ export default function HeroHome() {
 
       {/* Left scrollable content */}
       <div className="w-full lg:w-1/2 pl-4 sm:pl-8 lg:pl-36 pr-4 sm:pr-8">
-        <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[50vh]">
+        <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[55vh]">
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
@@ -204,6 +207,25 @@ export default function HeroHome() {
                 We are examining current AI models and their biases with a focus on the life sciences and causality.
               </p>
               <a href="https://www.embopress.org/doi/full/10.1038/s44320-024-00041-w" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Read more about our work →
+              </a>
+            </div>
+          </div>
+
+          {/* People Section */}
+          <div id="people" className="min-h-[50vh] flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Join us
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                We are always looking for talented and motivated individuals to join our team.
+              </p>
+              <a href="/people" className="text-indigo-500 hover:text-indigo-400">
+                Join us →
+              </a>
+              <br />
+              <a href="https://github.com/slolab" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
                 Read more about our work →
               </a>
             </div>
