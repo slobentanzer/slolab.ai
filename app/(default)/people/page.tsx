@@ -25,16 +25,20 @@ export default function People() {
                             <h2 className="text-2xl font-semibold text-gray-200 mb-6">How to Apply</h2>
                             <div className="space-y-6 text-indigo-200/65">
                                 <p>
-                                    For all positions, candidates should email their application to sebastian.lobentanzer[at]helmholtz-munich.de, including:
+                                    Please apply through our official job portal by clicking the button below. Make sure to include your CV, a letter of interest tailored to our group, references, and if possible, a link to your code repository.
                                 </p>
-                                <ul className="list-disc list-inside space-y-2 ml-4">
-                                    <li>CV</li>
-                                    <li>Letter of interest tailored to our group</li>
-                                    <li>Names of (ideally 3) references</li>
-                                    <li>Link to code repository (if possible)</li>
-                                </ul>
+                                <div className="text-center pt-4">
+                                    <a
+                                        href="https://jobs.helmholtz-muenchen.de/jobposting/59f5ff85d5e27c825d41d3d7e58637ddc2dfddf50"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn text-indigo-500 bg-indigo-500/10 hover:bg-indigo-500/20 border-indigo-500/10 w-full mb-4 sm:w-auto sm:mb-0"
+                                    >
+                                        Apply Now
+                                    </a>
+                                </div>
                                 <p>
-                                    Your letter of interest should mention specific projects or articles of our group that interest you and explain how you would fit into our team. Non-specific applications or those sent to a different address will not be considered.
+                                    Your letter of interest should mention specific projects or articles of our group that interest you and explain how you would fit into our team.
                                 </p>
                             </div>
                         </div>
