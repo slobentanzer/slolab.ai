@@ -93,10 +93,10 @@ export default function HeroHome() {
     <section className="relative min-h-screen scroll-smooth">
       {/* Centered introduction text */}
       <div className="absolute top-0 left-0 right-0 text-center px-4 pt-16 xs:pt-8">
-        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-32">
+        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-16">
           Welcome to the lab website of Sebastian Lobentanzer's group at Helmholtz Munich. We develop open-source software solutions for Accessible Biomedical AI Research, aiming to increase accessibility of:
         </p>
-        <div className="mt-4">
+        <div className="mt-2">
           <AccessibilityDisplay
             pairs={[
               { modality: "Scientific Data", audience: "Researchers." },
@@ -138,7 +138,7 @@ export default function HeroHome() {
             ]}
           />
         </div>
-        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-32">Discover our focus areas by scrolling down. 👇</p>
+        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-40">Discover our focus areas by scrolling down. 👇</p>
       </div>
 
       <NeonBackground />
