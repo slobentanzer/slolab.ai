@@ -99,25 +99,42 @@ export default function HeroHome() {
         <div className="mt-4">
           <AccessibilityDisplay
             pairs={[
-              // Scientific Data pairs
               { modality: "Scientific Data", audience: "Researchers." },
               { modality: "Scientific Data", audience: "Clinicians." },
               { modality: "Scientific Data", audience: "Students." },
-              // Medical Knowledge pairs
               { modality: "Medical Knowledge", audience: "Clinicians." },
               { modality: "Medical Knowledge", audience: "Researchers." },
-              { modality: "Medical Knowledge", audience: "Lay People." },
-              // Current Best Practice pairs
-              { modality: "Current Best Practice", audience: "Students." },
-              { modality: "Current Best Practice", audience: "Clinicians." },
-              { modality: "Current Best Practice", audience: "Researchers." },
-              // AI Systems Architecture pairs
+              { modality: "Medical Knowledge", audience: "Biologists." },
+              { modality: "Medical Knowledge", audience: "Drug Developers." },
+              { modality: "Medical Knowledge", audience: "Students." },
+              { modality: "Medical Knowledge", audience: "Caregivers." },
+              { modality: "Biology", audience: "Computer Scientists." },
+              { modality: "Biology", audience: "Drug Developers." },
+              { modality: "Biology", audience: "Students." },
+              { modality: "Toxicology", audience: "Drug Developers." },
+              { modality: "Toxicology", audience: "Students." },
+              { modality: "Toxicology", audience: "Clinicians." },
+              { modality: "Best Practice", audience: "Students." },
+              { modality: "Best Practice", audience: "Clinicians." },
+              { modality: "Best Practice", audience: "Developers." },
+              { modality: "Best Practice", audience: "Researchers." },
               { modality: "AI Systems Architecture", audience: "Researchers." },
+              { modality: "AI Systems Architecture", audience: "Biologists." },
               { modality: "AI Systems Architecture", audience: "Students." },
-              // Manuscripts pairs
-              { modality: "Manuscripts", audience: "Lay People." },
               { modality: "Manuscripts", audience: "Students." },
-              { modality: "Manuscripts", audience: "Researchers." }
+              { modality: "Manuscripts", audience: "Researchers." },
+              { modality: "Manuscripts", audience: "Editors." },
+              { modality: "Manuscripts", audience: "Readers." },
+              { modality: "Research Insights", audience: "Lay People." },
+              { modality: "Research Insights", audience: "Developers." },
+              { modality: "Research Insights", audience: "Clinicians." },
+              { modality: "Research Insights", audience: "Students." },
+              { modality: "Research Insights", audience: "Caregivers." },
+              { modality: "Therapeutic Insights", audience: "Lay People." },
+              { modality: "Therapeutic Insights", audience: "Clinicians." },
+              { modality: "Therapeutic Insights", audience: "Students." },
+              { modality: "Therapeutic Insights", audience: "Researchers." },
+              { modality: "Therapeutic Insights", audience: "Caregivers." }
             ]}
           />
         </div>
@@ -136,7 +153,7 @@ export default function HeroHome() {
 
       {/* Left scrollable content */}
       <div className="w-full lg:w-1/2 pl-4 sm:pl-8 lg:pl-36 pr-4 sm:pr-8">
-        <div ref={sectionsRef} className="space-y-[40vh] pt-[25vh] pb-[55vh]">
+        <div ref={sectionsRef} className="space-y-[40vh] pt-[35vh] xs:pt-[30vh] lg:pt-[25vh] pb-[55vh]">
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
