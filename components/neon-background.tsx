@@ -74,7 +74,7 @@ export default function NeonBackground() {
         }
 
         const animate = () => {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             lines.forEach(line => {
