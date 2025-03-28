@@ -193,36 +193,55 @@ export default function AccessibilityDisplay({ pairs }: AccessibilityDisplayProp
         <div className="flex items-center justify-center relative">
             {/* Pixel stream */}
             <PixelStream
-                startX={-20}  // Adjusted to start at modality word
+                startX={200}  // Adjusted to start at modality word
                 startY={50}    // Centered vertically with the text
-                endX={340}     // End at right edge of container
+                endX={800}     // End at right edge of container
                 endY={50}      // Keep same vertical position
             />
 
             {/* Modality display */}
             <div className="relative w-64 h-16 z-10">
                 <div className="absolute inset-0 flex items-center justify-end pr-4">
-                    <span className="text-xl font-pixel text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">
+                    <motion.span
+                        key={modalities[modalityIndex]}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="text-xl font-pixel text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400"
+                    >
                         {modalities[modalityIndex]}
-                    </span>
+                    </motion.span>
                 </div>
             </div>
 
             {/* "to" text */}
             <div className="relative w-16 h-16 z-10">
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-xl font-pixel text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                        className="text-xl font-pixel text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400"
+                    >
                         to
-                    </span>
+                    </motion.span>
                 </div>
             </div>
 
             {/* Audience display */}
             <div className="relative w-64 h-16 z-10">
                 <div className="absolute inset-0 flex items-center justify-start pl-4">
-                    <span className="text-xl font-pixel text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">
+                    <motion.span
+                        key={audiences[audienceIndex]}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="text-xl font-pixel text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400"
+                    >
                         {audiences[audienceIndex]}
-                    </span>
+                    </motion.span>
                 </div>
             </div>
         </div>
