@@ -94,30 +94,30 @@ export default function HeroHome() {
       {/* Centered introduction text */}
       <div className="absolute top-0 left-0 right-0 text-center px-4 pt-16 xs:pt-8">
         <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-32">
-          Welcome to the lab website of Sebastian Lobentanzer's group at Helmholtz Munich. We develop open-source software solutions for Accessible Biomedical AI Research.
+          Welcome to the lab website of Sebastian Lobentanzer's group at Helmholtz Munich. We develop open-source software solutions for Accessible Biomedical AI Research, aiming to increase accessibility of:
         </p>
-        <div className="mt-8">
+        <div className="mt-4">
           <AccessibilityDisplay
             pairs={[
               // Scientific Data pairs
-              { modality: "Scientific Data", audience: "Researchers" },
-              { modality: "Scientific Data", audience: "Clinicians" },
-              { modality: "Scientific Data", audience: "Students" },
+              { modality: "Scientific Data", audience: "Researchers." },
+              { modality: "Scientific Data", audience: "Clinicians." },
+              { modality: "Scientific Data", audience: "Students." },
               // Medical Knowledge pairs
-              { modality: "Medical Knowledge", audience: "Clinicians" },
-              { modality: "Medical Knowledge", audience: "Researchers" },
-              { modality: "Medical Knowledge", audience: "Lay People" },
+              { modality: "Medical Knowledge", audience: "Clinicians." },
+              { modality: "Medical Knowledge", audience: "Researchers." },
+              { modality: "Medical Knowledge", audience: "Lay People." },
               // Current Best Practice pairs
-              { modality: "Current Best Practice", audience: "Students" },
-              { modality: "Current Best Practice", audience: "Clinicians" },
-              { modality: "Current Best Practice", audience: "Researchers" },
+              { modality: "Current Best Practice", audience: "Students." },
+              { modality: "Current Best Practice", audience: "Clinicians." },
+              { modality: "Current Best Practice", audience: "Researchers." },
               // AI Systems Architecture pairs
-              { modality: "AI Systems Architecture", audience: "Researchers" },
-              { modality: "AI Systems Architecture", audience: "Students" },
+              { modality: "AI Systems Architecture", audience: "Researchers." },
+              { modality: "AI Systems Architecture", audience: "Students." },
               // Manuscripts pairs
-              { modality: "Manuscripts", audience: "Lay People" },
-              { modality: "Manuscripts", audience: "Students" },
-              { modality: "Manuscripts", audience: "Researchers" }
+              { modality: "Manuscripts", audience: "Lay People." },
+              { modality: "Manuscripts", audience: "Students." },
+              { modality: "Manuscripts", audience: "Researchers." }
             ]}
           />
         </div>
