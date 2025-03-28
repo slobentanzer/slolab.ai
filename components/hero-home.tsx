@@ -105,6 +105,7 @@ export default function HeroHome() {
               { modality: "Medical Knowledge", audience: "Clinicians." },
               { modality: "Medical Knowledge", audience: "Researchers." },
               { modality: "Medical Knowledge", audience: "Biologists." },
+              { modality: "Medical Knowledge", audience: "Computer Scientists." },
               { modality: "Medical Knowledge", audience: "Drug Developers." },
               { modality: "Medical Knowledge", audience: "Students." },
               { modality: "Medical Knowledge", audience: "Caregivers." },

@@ -154,40 +154,66 @@ export default function AccessibilityDisplay({ pairs }: AccessibilityDisplayProp
     const modalities = Array.from(new Set(pairs.map(pair => pair.modality)));
     const audiences = Array.from(new Set(pairs.map(pair => pair.audience)));
 
-    // Create a map of valid combinations
-    const validCombinations = new Map<string, Set<string>>();
+    // Create a map of valid modalities for each audience
+    const validModalitiesPerAudience = new Map<string, Set<string>>();
+    // Create a map of valid audiences for each modality
+    const validAudiencesPerModality = new Map<string, Set<string>>();
+
     pairs.forEach(pair => {
-        if (!validCombinations.has(pair.modality)) {
-            validCombinations.set(pair.modality, new Set());
+        // Add modality to audience's valid modalities
+        if (!validModalitiesPerAudience.has(pair.audience)) {
+            validModalitiesPerAudience.set(pair.audience, new Set());
         }
-        validCombinations.get(pair.modality)?.add(pair.audience);
+        validModalitiesPerAudience.get(pair.audience)?.add(pair.modality);
+
+        // Add audience to modality's valid audiences
+        if (!validAudiencesPerModality.has(pair.modality)) {
+            validAudiencesPerModality.set(pair.modality, new Set());
+        }
+        validAudiencesPerModality.get(pair.modality)?.add(pair.audience);
     });
 
     useEffect(() => {
         const changeInterval = 3000;
 
         const cycle = () => {
+            const currentModality = modalities[modalityIndex];
+            const currentAudience = audiences[audienceIndex];
+
             if (isChangingModality) {
-                setModalityIndex((modalityIndex + 1) % modalities.length);
-                setIsChangingModality(false);
+                // When changing modality, randomly select from valid modalities for current audience
+                const validModalities = validModalitiesPerAudience.get(currentAudience);
+                if (validModalities) {
+                    const validModalityArray = Array.from(validModalities);
+                    const otherModalities = validModalityArray.filter(m => m !== currentModality);
+
+                    if (otherModalities.length > 0) {
+                        const randomModality = otherModalities[Math.floor(Math.random() * otherModalities.length)];
+                        const newModalityIndex = modalities.indexOf(randomModality);
+                        setModalityIndex(newModalityIndex);
+                        setIsChangingModality(false);
+                    }
+                }
             } else {
-                const currentModality = modalities[modalityIndex];
-                const validAudiences = validCombinations.get(currentModality);
+                // When changing audience, randomly select from valid audiences for current modality
+                const validAudiences = validAudiencesPerModality.get(currentModality);
                 if (validAudiences) {
-                    const currentAudience = audiences[audienceIndex];
                     const validAudienceArray = Array.from(validAudiences);
-                    const currentAudienceIndex = validAudienceArray.indexOf(currentAudience);
-                    const nextIndex = (currentAudienceIndex + 1) % validAudienceArray.length;
-                    const nextAudience = validAudienceArray[nextIndex];
-                    setAudienceIndex(audiences.indexOf(nextAudience));
-                    setIsChangingModality(true);
+                    const otherAudiences = validAudienceArray.filter(a => a !== currentAudience);
+
+                    if (otherAudiences.length > 0) {
+                        const randomAudience = otherAudiences[Math.floor(Math.random() * otherAudiences.length)];
+                        const newAudienceIndex = audiences.indexOf(randomAudience);
+                        setAudienceIndex(newAudienceIndex);
+                        setIsChangingModality(true);
+                    }
                 }
             }
         };
 
         const interval = setInterval(cycle, changeInterval);
         return () => clearInterval(interval);
-    }, [modalities.length, audiences.length, modalityIndex, audienceIndex, validCombinations, isChangingModality]);
+    }, [modalities.length, modalityIndex, audienceIndex, validModalitiesPerAudience, validAudiencesPerModality, isChangingModality]);
 
     return (
         <div className="flex items-center justify-center relative">
