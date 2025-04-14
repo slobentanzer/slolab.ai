@@ -8,6 +8,8 @@ import AccessibilityDisplay from "./accessibility-display";
 export default function HeroHome() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const sectionsRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+  const [introHeight, setIntroHeight] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,9 +21,9 @@ export default function HeroHome() {
 
       // Define where each logo should be fully visible (in scroll percentage)
       const logoRegions = [
-        { start: 0, end: 5 },    // Extraction logo
-        { start: 22, end: 27 },   // Representation logo
-        { start: 45, end: 52 },   // Chat logo
+        { start: 0, end: 15 },    // Extraction logo
+        { start: 25, end: 30 },   // Representation logo
+        { start: 48, end: 55 },   // Chat logo
         { start: 69, end: 75 },   // AI logo
         { start: 90, end: 100 }   // People logo
       ];
@@ -53,8 +55,22 @@ export default function HeroHome() {
       setScrollProgress(progress);
     };
 
+    const updateIntroHeight = () => {
+      if (introRef.current) {
+        setIntroHeight(introRef.current.offsetHeight);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', updateIntroHeight);
+
+    // Initial calculation
+    updateIntroHeight();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateIntroHeight);
+    };
   }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -92,11 +108,11 @@ export default function HeroHome() {
   return (
     <section className="relative min-h-screen scroll-smooth">
       {/* Centered introduction text */}
-      <div className="absolute top-0 left-0 right-0 text-center px-4 pt-16 xs:pt-8">
-        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-16">
+      <div ref={introRef} className="absolute top-0 left-0 right-0 text-center px-4 pt-16 xs:pt-8 min-h-[40vh] flex flex-col justify-start">
+        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-8">
           Welcome to the lab website of Sebastian Lobentanzer's group at Helmholtz Munich. We develop open-source software solutions for Accessible Biomedical AI Research, aiming to increase accessibility of:
         </p>
-        <div className="mt-2">
+        <div className="mt-2 mb-4">
           <AccessibilityDisplay
             pairs={[
               { modality: "Scientific Data", audience: "Researchers." },
@@ -141,12 +157,15 @@ export default function HeroHome() {
             ]}
           />
         </div>
-        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-40">Discover our focus areas by scrolling down. 👇</p>
+        <p className="text-xl xs:text-base text-indigo-200/65 max-w-3xl mx-auto mb-0 xs:mb-16">Discover our focus areas by scrolling down. 👇</p>
       </div>
 
       <NeonBackground />
       {/* Right hex animation container - now positioned behind text on mobile */}
-      <div className="absolute top-[45vh] lg:top-[15vh] left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-23vh)] -z-10 lg:z-0">
+      <div
+        className="absolute left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-45vh)] -z-10 lg:z-0 min-h-[50vh]"
+        style={{ top: `calc(${introHeight}px - 15vh)` }}
+      >
         <div className="sticky top-0 h-screen flex items-center justify-center">
           <div className="w-[600px] h-[600px]">
             <HexAnimation progress={scrollProgress} />
@@ -156,7 +175,11 @@ export default function HeroHome() {
 
       {/* Left scrollable content */}
       <div className="w-full lg:w-1/2 pl-4 sm:pl-8 lg:pl-36 pr-4 sm:pr-8">
-        <div ref={sectionsRef} className="space-y-[40vh] pt-[40vh] xs:pt-[40vh] lg:pt-[35vh] pb-[55vh]">
+        <div
+          ref={sectionsRef}
+          className="space-y-[40vh] pb-[55vh]"
+          style={{ paddingTop: `${introHeight + 40}px` }}
+        >
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
