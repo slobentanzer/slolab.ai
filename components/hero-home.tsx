@@ -146,7 +146,7 @@ export default function HeroHome() {
 
       <NeonBackground />
       {/* Right hex animation container - now positioned behind text on mobile */}
-      <div className="absolute top-96 lg:top-0 left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-23vh)] -z-10 lg:z-0">
+      <div className="absolute top-[45vh] lg:top-[15vh] left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-23vh)] -z-10 lg:z-0">
         <div className="sticky top-0 h-screen flex items-center justify-center">
           <div className="w-[600px] h-[600px]">
             <HexAnimation progress={scrollProgress} />
@@ -156,7 +156,7 @@ export default function HeroHome() {
 
       {/* Left scrollable content */}
       <div className="w-full lg:w-1/2 pl-4 sm:pl-8 lg:pl-36 pr-4 sm:pr-8">
-        <div ref={sectionsRef} className="space-y-[40vh] pt-[35vh] xs:pt-[30vh] lg:pt-[25vh] pb-[55vh]">
+        <div ref={sectionsRef} className="space-y-[40vh] pt-[40vh] xs:pt-[40vh] lg:pt-[35vh] pb-[55vh]">
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
