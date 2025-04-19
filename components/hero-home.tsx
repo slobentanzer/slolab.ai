@@ -163,8 +163,8 @@ export default function HeroHome() {
       <NeonBackground />
       {/* Right hex animation container - now positioned behind text on mobile */}
       <div
-        className="absolute left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-45vh)] -z-10 lg:z-0 min-h-[50vh]"
-        style={{ top: `calc(${introHeight}px - 15vh)` }}
+        className="absolute left-3/4 -translate-x-1/2 lg:translate-x-0 lg:right-0 lg:left-auto w-[600px] lg:w-1/2 h-[calc(100%-42vh)] -z-10 lg:z-0 min-h-[50vh]"
+        style={{ top: `calc(${introHeight}px - 23vh)` }}
       >
         <div className="sticky top-0 h-screen flex items-center justify-center">
           <div className="w-[600px] h-[600px]">
