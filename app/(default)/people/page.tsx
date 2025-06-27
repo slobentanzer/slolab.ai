@@ -25,16 +25,15 @@ export default function People() {
                             <h2 className="text-2xl font-semibold text-gray-200 mb-6">How to Apply</h2>
                             <div className="space-y-6 text-indigo-200/65">
                                 <p>
-                                    Please apply through our official job portal by clicking the button below. Make sure to include your CV, a letter of interest tailored to our group, references, and if possible, a link to your code repository.
+                                    To apply for a position, please send your application materials to our team. Make sure to include your CV, a letter of interest tailored to our group, references, and if possible, a link to your code repository.
                                 </p>
                                 <div className="text-center pt-4">
+                                    <p className="text-lg font-medium text-gray-200 mb-2">Contact us at:</p>
                                     <a
-                                        href="https://jobs.helmholtz-muenchen.de/jobposting/59f5ff85d5e27c825d41d3d7e58637ddc2dfddf50"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn text-indigo-500 bg-indigo-500/10 hover:bg-indigo-500/20 border-indigo-500/10 w-full mb-4 sm:w-auto sm:mb-0"
+                                        href="mailto:sebastian.lobentanzer@helmholtz-munich.de"
+                                        className="text-indigo-400 hover:text-indigo-300 transition-colors text-lg font-medium"
                                     >
-                                        Apply Now
+                                        sebastian.lobentanzer@helmholtz-munich.de
                                     </a>
                                 </div>
                                 <p>
@@ -48,7 +47,7 @@ export default function People() {
                             <h2 className="text-2xl font-semibold text-gray-200 mb-6">Available Positions</h2>
                             <div className="space-y-6 text-indigo-200/65">
                                 <p>
-                                    We have open positions for:
+                                    We hire for:
                                 </p>
                                 <ul className="list-disc list-inside ml-4">
                                     <li>Postdoctoral fellows</li>
