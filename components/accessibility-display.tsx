@@ -174,7 +174,7 @@ export default function AccessibilityDisplay({ pairs }: AccessibilityDisplayProp
     });
 
     useEffect(() => {
-        const changeInterval = 3000;
+        const changeInterval = 1800;
 
         const cycle = () => {
             const currentModality = modalities[modalityIndex];
@@ -192,7 +192,13 @@ export default function AccessibilityDisplay({ pairs }: AccessibilityDisplayProp
                         const newModalityIndex = modalities.indexOf(randomModality);
                         setModalityIndex(newModalityIndex);
                         setIsChangingModality(false);
+                    } else {
+                        // If no other modalities available, just toggle to audience change
+                        setIsChangingModality(false);
                     }
+                } else {
+                    // Fallback: just toggle to audience change
+                    setIsChangingModality(false);
                 }
             } else {
                 // When changing audience, randomly select from valid audiences for current modality
@@ -206,7 +212,13 @@ export default function AccessibilityDisplay({ pairs }: AccessibilityDisplayProp
                         const newAudienceIndex = audiences.indexOf(randomAudience);
                         setAudienceIndex(newAudienceIndex);
                         setIsChangingModality(true);
+                    } else {
+                        // If no other audiences available, just toggle to modality change
+                        setIsChangingModality(true);
                     }
+                } else {
+                    // Fallback: just toggle to modality change
+                    setIsChangingModality(true);
                 }
             }
         };
