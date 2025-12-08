@@ -270,7 +270,7 @@ export default function HexAnimation({ progress }: HexAnimationProps) {
         <div className="relative h-full w-full overflow-hidden flex items-center justify-center">
             <div
                 ref={containerRef}
-                className="absolute inset-0 flex items-center justify-center translate-y-[10%]"
+                className="absolute inset-0 flex items-center justify-center translate-y-[15%]"
             >
                 {currentPixels.map((pixel) => (
                     <motion.div
