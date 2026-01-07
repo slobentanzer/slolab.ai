@@ -144,6 +144,17 @@ const colorizeCoordinates = (
 
 const shapes: Shape[] = [
     {
+        name: "Our Mission",
+        description: "Building intelligent systems that transform how we discover, connect, and understand knowledge",
+        link: "/",
+        direction: 'top-left-to-bottom-right',
+        pixels: () => Promise.resolve(colorizeCoordinates(
+            hexCoordinates.turtle,
+            1.2,
+            'top-left-to-bottom-right'
+        ))
+    },
+    {
         name: "Search and Discovery",
         description: "Find and explore relevant information",
         link: "/search",

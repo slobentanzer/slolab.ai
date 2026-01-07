@@ -21,11 +21,12 @@ export default function HeroHome() {
 
       // Define where each logo should be fully visible (in scroll percentage)
       const logoRegions = [
-        { start: 0, end: 15 },    // Extraction logo
-        { start: 25, end: 30 },   // Representation logo
-        { start: 48, end: 55 },   // Chat logo
-        { start: 69, end: 75 },   // AI logo
-        { start: 90, end: 100 }   // People logo
+        { start: 0, end: 12 },    // Mission logo (turtle)
+        { start: 20, end: 27 },   // Extraction logo
+        { start: 37, end: 42 },   // Representation logo
+        { start: 57, end: 63 },   // Chat logo
+        { start: 75, end: 81 },   // AI logo
+        { start: 92, end: 100 }   // People logo
       ];
 
       // Convert current scroll to 0-100 scale
@@ -33,20 +34,26 @@ export default function HeroHome() {
 
       // Find which region or transition we're in
       let progress = 0;
-      for (let i = 0; i < logoRegions.length; i++) {
-        const currentRegion = logoRegions[i];
-        const nextRegion = logoRegions[i + 1];
+      
+      // Handle the very end case
+      if (scrollPercentage >= 100) {
+        progress = 1;
+      } else {
+        for (let i = 0; i < logoRegions.length; i++) {
+          const currentRegion = logoRegions[i];
+          const nextRegion = logoRegions[i + 1];
 
-        if (scrollPercentage <= currentRegion.end) {
-          // In this region - show this logo
-          progress = i * 0.2;
-          break;
-        } else if (!nextRegion || scrollPercentage < nextRegion.start) {
-          // In transition to next region
-          const transitionLength = (nextRegion ? nextRegion.start : 100) - currentRegion.end;
-          const transitionProgress = (scrollPercentage - currentRegion.end) / transitionLength;
-          progress = (i + transitionProgress) * 0.2;
-          break;
+          if (scrollPercentage <= currentRegion.end) {
+            // In this region - show this logo
+            progress = i / 6;
+            break;
+          } else if (!nextRegion || scrollPercentage < nextRegion.start) {
+            // In transition to next region
+            const transitionLength = (nextRegion ? nextRegion.start : 100) - currentRegion.end;
+            const transitionProgress = (scrollPercentage - currentRegion.end) / transitionLength;
+            progress = (i + transitionProgress) / 6;
+            break;
+          }
         }
       }
 
@@ -180,6 +187,27 @@ export default function HeroHome() {
           className="space-y-[40vh] pb-[55vh]"
           style={{ paddingTop: `${introHeight + 40}px` }}
         >
+          {/* Mission Section */}
+          <div className="min-h-[40vh] flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Our Mission
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                In this time of fast AI progress, we believe in the benefits of "{''}
+                <a
+                  href="https://en.wikipedia.org/wiki/Slow_science"
+                  className="text-indigo-500 hover:text-indigo-400"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  slo science
+                </a>{''}
+                " (pun intended) to make biomedical AI accessible to everyone. We do our best to embrace thoughtful and sustainable scientific practice and build robust, well-documented tools that stand the test of time. Read more below.
+              </p>
+            </div>
+          </div>
+
           {/* Search Section */}
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">

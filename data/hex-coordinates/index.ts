@@ -1,3 +1,4 @@
+import { turtle } from './turtle';
 import { searchDiscovery } from './search-discovery';
 import { knowledgeGraph } from './knowledge-graph';
 import { conversationalAi } from './conversational-ai';
@@ -5,6 +6,7 @@ import { deepLearning } from './deep-learning';
 import { people } from './people';
 
 export const hexCoordinates = {
+    turtle,
     searchDiscovery,
     knowledgeGraph,
     conversationalAi,
