@@ -285,12 +285,32 @@ export default function HeroHome() {
                 </a>{' '}
                 framework.
               </p>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                We maintain a registry for biomedical MCP servers at{' '}
+                <a
+                  href="https://biocontext.ai"
+                  className="text-indigo-500 hover:text-indigo-400"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  biocontext.ai
+                </a>
+                , providing a curated collection of tools and resources for biomedical AI research.
+              </p>
               <a href="https://www.nature.com/articles/s41587-024-02534-3" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
-                Read the paper →
+                BioChatter paper →
+              </a>
+              <br />
+              <a href="https://www.nature.com/articles/s41587-025-02900-9" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                BioContextAI paper →
               </a>
               <br />
               <a href="https://biochatter.org" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
                 Read the docs →
+              </a>
+              <br />
+              <a href="https://biocontext.ai" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Visit the MCP registry →
               </a>
             </div>
           </div>
