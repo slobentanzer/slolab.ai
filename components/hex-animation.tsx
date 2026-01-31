@@ -155,12 +155,12 @@ const shapes: Shape[] = [
         ))
     },
     {
-        name: "Search and Discovery",
-        description: "Find and explore relevant information",
-        link: "/search",
+        name: "AAC: Agentic Automation Canvas",
+        description: "Helps developers and users of agentic solutions plan and execute their projects with realistic expectations",
+        link: "/aac",
         direction: 'bottom-left-to-top-right',
         pixels: () => Promise.resolve(colorizeCoordinates(
-            hexCoordinates.searchDiscovery,
+            hexCoordinates.aac,
             1.2,
             'bottom-left-to-top-right'
         ))
@@ -196,6 +196,17 @@ const shapes: Shape[] = [
             hexCoordinates.deepLearning,
             1.2,
             'left-to-right'
+        ))
+    },
+    {
+        name: "Search and Discovery",
+        description: "Find and explore relevant information",
+        link: "/search",
+        direction: 'bottom-left-to-top-right',
+        pixels: () => Promise.resolve(colorizeCoordinates(
+            hexCoordinates.searchDiscovery,
+            1.2,
+            'bottom-left-to-top-right'
         ))
     },
     {

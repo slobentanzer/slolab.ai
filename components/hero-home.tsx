@@ -21,12 +21,13 @@ export default function HeroHome() {
 
       // Define where each logo should be fully visible (in scroll percentage)
       const logoRegions = [
-        { start: 0, end: 12 },    // Mission logo (turtle)
-        { start: 20, end: 27 },   // Extraction logo
-        { start: 37, end: 42 },   // Representation logo
-        { start: 57, end: 63 },   // Chat logo
-        { start: 75, end: 81 },   // AI logo
-        { start: 92, end: 100 }   // People logo
+        { start: 0, end: 8 },     // Mission logo (turtle)
+        { start: 15, end: 21 },   // AAC logo
+        { start: 29, end: 37 },   // Representation logo
+        { start: 45, end: 53 },   // Chat logo
+        { start: 62, end: 70 },   // AI logo (Understanding)
+        { start: 78, end: 86 },   // Extraction logo
+        { start: 94, end: 100 }   // People logo
       ];
 
       // Convert current scroll to 0-100 scale
@@ -45,13 +46,13 @@ export default function HeroHome() {
 
           if (scrollPercentage <= currentRegion.end) {
             // In this region - show this logo
-            progress = i / 6;
+            progress = i / 7;
             break;
           } else if (!nextRegion || scrollPercentage < nextRegion.start) {
             // In transition to next region
             const transitionLength = (nextRegion ? nextRegion.start : 100) - currentRegion.end;
             const transitionProgress = (scrollPercentage - currentRegion.end) / transitionLength;
-            progress = (i + transitionProgress) / 6;
+            progress = (i + transitionProgress) / 7;
             break;
           }
         }
@@ -208,32 +209,29 @@ export default function HeroHome() {
             </div>
           </div>
 
-          {/* Search Section */}
+          {/* AAC Section */}
           <div className="min-h-[40vh] flex items-center">
             <div className="max-w-xl">
               <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
-                Knowledge Extraction
+                AAC: Agentic Automation Canvas
               </h2>
               <p className="text-xl text-indigo-200/65 mb-6">
-                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images. This new framework will join our existing solutions for{' '}
-                <a
-                  href="#knowledge-representation"
-                  onClick={(e) => handleClick(e, 'knowledge-representation')}
-                  className="text-indigo-500 hover:text-indigo-400"
-                >
-                  knowledge representation
-                </a>{' '}
-                and{' '}
+                A framework for designing and documenting agentic automation solutions that use{' '}
                 <a
                   href="#conversational-ai"
                   onClick={(e) => handleClick(e, 'conversational-ai')}
                   className="text-indigo-500 hover:text-indigo-400"
                 >
                   conversational AI
-                </a>.
+                </a>{' '}
+                to augment human judgment in routine tasks. Plan and execute projects with realistic expectations, capturing requirements, feasibility, and governance. Bridges the gap between prototype enthusiasm and production reality by formalizing the agreement before deployment. FAIR by design.
               </p>
-              <a href="/search" className="text-indigo-500 hover:text-indigo-400">
-                Python framework coming soon →
+              <a href="https://aac.slolab.ai" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Use the web application →
+              </a>
+              <br />
+              <a href="https://aac.slolab.ai/docs/" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Read the docs →
               </a>
             </div>
           </div>
@@ -326,6 +324,36 @@ export default function HeroHome() {
               </p>
               <a href="https://www.embopress.org/doi/full/10.1038/s44320-024-00041-w" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
                 Read more about our work →
+              </a>
+            </div>
+          </div>
+
+          {/* Search Section - moved here */}
+          <div className="min-h-[40vh] flex items-center">
+            <div className="max-w-xl">
+              <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,theme(colors.gray.200),theme(colors.indigo.200))] bg-clip-text pb-4 font-nacelle text-4xl font-semibold text-transparent">
+                Knowledge Extraction
+              </h2>
+              <p className="text-xl text-indigo-200/65 mb-6">
+                We aim at improving the cycle of scientific knowledge management, starting from the extraction of information from text and images. This new framework will join our existing solutions for{' '}
+                <a
+                  href="#knowledge-representation"
+                  onClick={(e) => handleClick(e, 'knowledge-representation')}
+                  className="text-indigo-500 hover:text-indigo-400"
+                >
+                  knowledge representation
+                </a>{' '}
+                and{' '}
+                <a
+                  href="#conversational-ai"
+                  onClick={(e) => handleClick(e, 'conversational-ai')}
+                  className="text-indigo-500 hover:text-indigo-400"
+                >
+                  conversational AI
+                </a>.
+              </p>
+              <a href="/search" className="text-indigo-500 hover:text-indigo-400">
+                Python framework coming soon →
               </a>
             </div>
           </div>
