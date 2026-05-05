@@ -1,13 +1,16 @@
 import Link from 'next/link'
+import PeopleShowcase from '@/components/people-showcase'
 
 export const metadata = {
-    title: 'Join Us',
-    description: 'Join our team at Helmholtz Munich. We have positions available for postdoctoral fellows, PhD candidates, and students (HiWi, Bachelor, Master, Internship).',
+    title: 'Our Team',
+    description: 'Meet the talented researchers and scientists driving innovation in biomedical AI research.',
 }
 
 export default function People() {
     return (
-        <section className="relative">
+        <>
+            <PeopleShowcase />
+            <section className="relative">
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
                 <div className="pt-32 pb-12 md:pt-40 md:pb-20">
                     {/* Page header */}
@@ -142,5 +145,6 @@ export default function People() {
                 </div>
             </div>
         </section>
+        </>
     )
 } 

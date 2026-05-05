@@ -5,7 +5,7 @@ import Logo from "./logo";
 
 export default function Header() {
   return (
-    <header className="z-30 mt-2 w-full md:mt-5">
+    <header className="z-50 fixed top-0 left-0 right-0 mt-2 w-full md:mt-5">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="relative flex flex-col sm:flex-row h-auto sm:h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/[0.2] px-4 sm:px-12 py-4 sm:py-0 backdrop-blur-[1px] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,rgb(236,72,153,0.01),theme(colors.gray.800/2),rgb(236,72,153,0.01))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)]">
           {/* Site branding */}
@@ -20,7 +20,7 @@ export default function Header() {
               href="/people"
               className="text-gray-200 hover:text-indigo-500 transition-colors text-base sm:text-lg font-medium"
             >
-              Join
+              People
             </Link>
 
             {/* GitHub link */}
