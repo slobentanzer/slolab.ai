@@ -1,23 +1,24 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { teamMembers } from '@/data/team-members'
+import NeonBackground from '@/components/neon-background'
 
 export default function PeopleShowcase() {
   const containerRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start start', 'end end']
+    // 'end start': progress hits 1.0 when the section bottom reaches the viewport top.
+    // With a 500vh spacer, at progress 0.8 (last person) the footer aligns exactly with the viewport bottom.
+    offset: ['start start', 'end start']
   })
 
-  // Calculate which person to show based on scroll progress
-  // Dynamically calculate ranges based on number of team members
   const totalMembers = teamMembers.length
   const scrollStops = Array.from({ length: totalMembers + 1 }, (_, i) => i / totalMembers)
   const indexStops = Array.from({ length: totalMembers + 1 }, (_, i) => Math.min(i, totalMembers - 1))
-  
+
   const currentPersonIndex = useTransform(
     scrollYProgress,
     scrollStops,
@@ -26,19 +27,16 @@ export default function PeopleShowcase() {
 
   return (
     <section ref={containerRef} className="relative">
+      <NeonBackground />
       {/* Scroll spacer to enable scroll tracking */}
-      <div className="h-[600vh] pb-96" />
+      <div className="h-[500vh]" />
 
       {/* Fixed showcase container */}
-      <motion.div 
+      <motion.div
         className="fixed left-0 right-0 bottom-0 z-10 pointer-events-none"
         style={{
           top: '120px',
-          opacity: useTransform(
-            scrollYProgress,
-            [0.85, 1],
-            [1, 0]
-          )
+          opacity: useTransform(scrollYProgress, [0.85, 1], [1, 0])
         }}
       >
         <div className="h-[calc(100vh-120px)] flex items-center justify-center px-8 sm:px-12 md:px-20">

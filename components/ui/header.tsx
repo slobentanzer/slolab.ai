@@ -15,12 +15,18 @@ export default function Header() {
 
           {/* Navigation */}
           <div className="flex items-center gap-8">
-            {/* Join link */}
             <Link
               href="/people"
               className="text-gray-200 hover:text-indigo-500 transition-colors text-base sm:text-lg font-medium"
             >
               People
+            </Link>
+
+            <Link
+              href="/join"
+              className="text-gray-200 hover:text-indigo-500 transition-colors text-base sm:text-lg font-medium"
+            >
+              Join Us
             </Link>
 
             {/* GitHub link */}
