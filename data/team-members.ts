@@ -33,12 +33,5 @@ export const teamMembers = [
     role: "Doctoral Researcher",
     bio: "Also at Roche",
     image: "/images/andreas.png"
-  },
-  {
-    id: 6,
-    name: "Marcel Said Zarifkar",
-    role: "Team Assistant",
-    bio: "Placeholder.",
-    image: "/images/marcel.jpg"
   }
 ];
