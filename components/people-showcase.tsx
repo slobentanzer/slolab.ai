@@ -14,7 +14,7 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
   })
 
   const totalMembers = members.length
-  const trailingViewports = 1
+  const trailingViewports = 0.2
   const scrollViewports = totalMembers + trailingViewports
   const scrollStops = [
     ...Array.from({ length: totalMembers }, (_, i) => i / scrollViewports),
@@ -24,10 +24,17 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
     ...Array.from({ length: totalMembers }, (_, i) => i),
     totalMembers - 1,
   ]
+  const exitStart = (scrollViewports - 1) / scrollViewports
+  const exitEnd = 1
   const currentPersonIndex = useTransform(
     scrollYProgress,
     scrollStops,
     indexStops
+  )
+  const showcaseY = useTransform(
+    scrollYProgress,
+    [exitStart, exitEnd],
+    ['0vh', '-100vh']
   )
 
   return (
@@ -37,8 +44,11 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
       style={{ position: 'relative', height: `${scrollViewports * 100}vh` }}
     >
       <NeonBackground />
-      {/* Sticky positioning lets the final profile scroll away naturally instead of fading. */}
-      <div className="sticky top-[120px] z-10 pointer-events-none">
+      {/* Hold the last profile, then move it upward naturally before the footer enters. */}
+      <motion.div
+        className="fixed left-0 right-0 bottom-0 z-10 pointer-events-none"
+        style={{ top: '120px', y: showcaseY }}
+      >
         <div className="h-[calc(100vh-120px)] flex items-center justify-center px-8 sm:px-12 md:px-20">
           <motion.div className="max-w-5xl w-full">
             <motion.div
@@ -57,7 +67,7 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
             </motion.div>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }
