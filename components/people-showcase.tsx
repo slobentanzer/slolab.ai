@@ -24,12 +24,21 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
     ...Array.from({ length: totalMembers }, (_, i) => i),
     totalMembers - 1,
   ]
+  const imageIndexStops = [
+    ...Array.from({ length: totalMembers }, (_, i) => i),
+    totalMembers - 0.56,
+  ]
   const exitStart = (scrollViewports - 1) / scrollViewports
   const exitEnd = 1
   const currentPersonIndex = useTransform(
     scrollYProgress,
     scrollStops,
     indexStops
+  )
+  const currentImageIndex = useTransform(
+    scrollYProgress,
+    scrollStops,
+    imageIndexStops
   )
   const showcaseY = useTransform(
     scrollYProgress,
@@ -62,6 +71,7 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
                   member={member}
                   index={index}
                   currentIndex={currentPersonIndex}
+                  imageIndex={currentImageIndex}
                 />
               ))}
             </motion.div>
@@ -76,16 +86,19 @@ function PersonDisplay({
   member,
   index,
   currentIndex,
+  imageIndex,
 }: {
   member: TeamMember
   index: number
   currentIndex: MotionValue<number>
+  imageIndex: MotionValue<number>
 }) {
-  // Image flips in from edge-on (90°) to flat (0°) and out to edge-on (-90°) — always opaque
+  // Hold a subtle loaded tilt through most of the profile, then release into a fast turn.
   const rotateY = useTransform(
-    currentIndex,
-    [index - 1, index - 0.5, index, index + 0.5, index + 1],
-    [90, 90, 0, -90, -90]
+    imageIndex,
+    [index - 0.53, index - 0.47, index + 0.47, index + 0.53],
+    [-180, -15, 15, 180],
+    { clamp: true }
   )
 
   const textY = useTransform(
@@ -103,7 +116,11 @@ function PersonDisplay({
       >
         <motion.div
           className="relative w-full h-full rounded-xl overflow-hidden border-2 border-indigo-500/40"
-          style={{ rotateY }}
+          style={{
+            rotateY,
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
         >
           <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
             <Image
