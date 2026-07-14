@@ -212,7 +212,7 @@ const shapes: Shape[] = [
     {
         name: "People",
         description: "Join us",
-        link: "/people",
+        link: "/join",
         direction: 'bottom-to-top',
         pixels: () => Promise.resolve(colorizeCoordinates(
             hexCoordinates.people,

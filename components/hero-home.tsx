@@ -367,7 +367,7 @@ export default function HeroHome() {
               <p className="text-xl text-indigo-200/65 mb-6">
                 We are always looking for talented and motivated individuals to join our team.
               </p>
-              <a href="/people" className="text-indigo-500 hover:text-indigo-400">
+              <a href="/join" className="text-indigo-500 hover:text-indigo-400">
                 Join us →
               </a>
               <br />
