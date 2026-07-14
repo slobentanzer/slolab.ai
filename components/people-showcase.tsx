@@ -146,10 +146,12 @@ function createParticleCloud(seed: number, count = 480): ShadowParticle[] {
       speedX: 0.35 + random() * 0.65,
       speedY: 0.35 + random() * 0.65,
       waveDelay: random() * 0.035,
-      rippleForce: 70 + random() * 75,
+      // Skewed distribution: most particles splash close to the card,
+      // only a few fly far.
+      rippleForce: 15 + Math.pow(random(), 5) * 100,
       tangent: (random() - 0.5) * 32,
       scatterAngle: random() * Math.PI * 2,
-      scatterForce: 20 + random() * 80,
+      scatterForce: 2 + Math.pow(random(), 2.2) * 88,
       returnBias: (random() - 0.5) * 0.08,
       returnCurve: (random() - 0.5) * 28,
       color: colors[Math.floor(random() * colors.length)],
@@ -175,12 +177,19 @@ function ParticleShadow({
     if (!context) return
 
     const particles = createParticleCloud(7919)
+    const forceMin = Math.min(...particles.map((p) => p.rippleForce))
+    const forceMax = Math.max(...particles.map((p) => p.rippleForce))
+    const forceRange = forceMax - forceMin || 1
     let width = 0
     let height = 0
     let latestProgress = imageIndex.get()
     let animationFrame: number | null = null
     let pageVisible = document.visibilityState === 'visible'
     let rippleStartedAt: number | null = null
+    let rippleDirection = 1
+    let smoothedVelocity = 0
+    let lastProgressSample = imageIndex.get()
+    let lastSampleTime: number | null = null
 
     const resize = () => {
       width = canvas.clientWidth
@@ -213,7 +222,7 @@ function ParticleShadow({
           : 0.5
       const shadowX = -1 + tilt * 4
       const shadowY = 2
-      const rippleDuration = 1200
+      const rippleDuration = 1500
       const rippleProgress = rippleStartedAt === null
         ? 1
         : Math.min(1, (time - rippleStartedAt) / rippleDuration)
@@ -221,6 +230,19 @@ function ParticleShadow({
       const centerX = cardLeft + cardWidth / 2
       const centerY = cardTop + cardHeight / 2
       const seconds = time / 1000
+
+      // Smoothed scroll velocity in progress units per second, so the cloud
+      // leans very slightly with the card's slow movement between bursts.
+      if (lastSampleTime !== null && time > lastSampleTime) {
+        const dt = time - lastSampleTime
+        const instantVelocity = ((progress - lastProgressSample) / dt) * 700
+        smoothedVelocity += (instantVelocity - smoothedVelocity) * Math.min(1, dt / 180)
+      }
+      lastProgressSample = progress
+      lastSampleTime = time
+      const drift = prefersReducedMotion
+        ? 0
+        : Math.max(-1, Math.min(1, smoothedVelocity * 1.2))
 
       context.globalCompositeOperation = 'source-over'
 
@@ -253,23 +275,34 @@ function ParticleShadow({
           Math.min(1, (rippleProgress - particle.waveDelay) / (1 - particle.waveDelay)),
         )
         const launchEnd = 0.12
-        const distanceFactor = (particle.rippleForce - 70) / 75
-        const returnEnd = Math.max(
-          launchEnd + 0.1,
-          0.98 - distanceFactor * 0.3 + particle.returnBias,
+        const distanceFactor = (particle.rippleForce - forceMin) / forceRange
+        // returnEnd stays below 1 so every particle finishes its return
+        // inside the ripple window instead of being cut off by it.
+        const returnEnd = Math.min(
+          0.99,
+          Math.max(launchEnd + 0.1, 0.92 - distanceFactor * 0.25 + particle.returnBias),
         )
         const returnProgress = particleRippleProgress <= launchEnd
           ? 0
           : Math.min(1, (particleRippleProgress - launchEnd) / (returnEnd - launchEnd))
+        // Cosine ease: zero velocity at landing, so particles settle back
+        // naturally instead of snapping to their base position.
         const organicRipple = prefersReducedMotion || rippleProgress >= 1
           ? 0
           : particleRippleProgress < launchEnd
             ? 1 - Math.pow(1 - particleRippleProgress / launchEnd, 4)
-            : particleRippleProgress >= returnEnd
-              ? 0
-              : Math.pow(1 - returnProgress, 0.9 + distanceFactor * 1.4)
-        const rippleDistance = organicRipple * particle.rippleForce
-        const scatterDistance = organicRipple * particle.scatterForce
+            : Math.pow(
+                0.5 + 0.5 * Math.cos(Math.PI * returnProgress),
+                1 + distanceFactor * 0.8,
+              )
+        // The card swings left on scroll down and right on scroll up, so it
+        // shoves the particles on that side hard while the opposite side
+        // barely stirs. push is +1 on the shoved side, -1 opposite.
+        const horizontal = directionX / directionLength
+        const push = -horizontal * rippleDirection
+        const pushScale = push > 0 ? 1 + push * 1.3 : 1 + push * 0.8
+        const rippleDistance = organicRipple * particle.rippleForce * pushScale
+        const scatterDistance = organicRipple * particle.scatterForce * pushScale
         const motionAmount = prefersReducedMotion ? 0 : particle.amplitude * (1 - organicRipple * 0.7)
         const jitterX =
           Math.sin(seconds * particle.speedX * 2.1 + particle.phaseX) * motionAmount +
@@ -334,6 +367,7 @@ function ParticleShadow({
     const handleProgress = (progress: number) => {
       if (Math.floor(latestProgress + 0.5) !== Math.floor(progress + 0.5)) {
         rippleStartedAt = performance.now()
+        rippleDirection = progress >= latestProgress ? 1 : -1
       }
       latestProgress = progress
       updateAnimation()
