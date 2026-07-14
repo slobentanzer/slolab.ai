@@ -2,7 +2,15 @@
 
 import { useEffect, useRef, type RefObject } from 'react'
 import Image from 'next/image'
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import {
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from 'framer-motion'
 import type { TeamMember } from '@/lib/team-members/schema'
 import NeonBackground from '@/components/neon-background'
 
@@ -416,9 +424,30 @@ function PersonDisplay({
   const rotateY = useTransform(
     imageIndex,
     [index - 0.53, index - 0.47, index + 0.47, index + 0.53],
-    [-180, -15, 15, 180],
+    [-180, -25, 25, 180],
     { clamp: true }
   )
+
+  // Idle sway: when scrolling pauses, the card slowly tilts back and forth.
+  // The sway ramps in over ~1.5s of stillness and drops quickly once
+  // scrolling resumes, so it never fights the scroll-driven flip.
+  const prefersReducedMotion = useReducedMotion()
+  const idleSway = useMotionValue(0)
+  const swayState = useRef({ weight: 0, lastValue: 0, lastMoveAt: 0 })
+  useAnimationFrame((time, delta) => {
+    if (prefersReducedMotion) return
+    const state = swayState.current
+    const value = imageIndex.get()
+    if (Math.abs(value - state.lastValue) > 0.0005) {
+      state.lastValue = value
+      state.lastMoveAt = time
+    }
+    const idle = time - state.lastMoveAt > 300
+    state.weight += ((idle ? 1 : 0) - state.weight) * Math.min(1, delta / (idle ? 1500 : 350))
+    const angle = Math.sin(time / 1100) * 4.5 + Math.sin(time / 2600) * 1.5
+    idleSway.set(angle * state.weight)
+  })
+  const cardRotateY = useTransform(() => rotateY.get() + idleSway.get())
 
   const textY = useTransform(
     currentIndex,
@@ -437,7 +466,7 @@ function PersonDisplay({
         <motion.div
           className="relative z-20 w-full h-full rounded-xl overflow-hidden border-2 border-indigo-500/40 bg-gray-950"
           style={{
-            rotateY,
+            rotateY: cardRotateY,
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
           }}
