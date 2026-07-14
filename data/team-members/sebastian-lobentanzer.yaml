@@ -1,0 +1,18 @@
+index: 1
+alumni: false
+name: Dr. Sebastian Lobentanzer
+role: Group Leader
+focus: Applying artificial intelligence to biology, healthcare, medicine, and the research process.
+expertise:
+  - Biomedical AI
+  - Pharmacology
+  - Molecular causality
+  - Software engineering
+currentWork:
+  - Building accessible, robust tools for biomedical research
+  - Exploring foundational principles and general-purpose LLM agents
+  - Connecting applied science with usability and epistemic robustness
+links:
+  - label: Personal site
+    href: https://slobentanzer.github.io
+image: /images/sebastian.jpg

@@ -1,0 +1,28 @@
+# Copy this file, rename it to the member's name, and replace the example values.
+# The loader ignores example.yaml. Fields marked optional may be removed entirely.
+
+# Required: unique whole number controlling display order.
+index: 99
+
+# Required: set to true to move this profile out of the current-members showcase.
+alumni: false
+
+name: Example Member
+role: Researcher
+focus: One concise sentence describing the member's research focus.
+image: /images/example-member.jpg
+
+# Optional: short, browsable labels.
+expertise:
+  - First area
+  - Second area
+
+# Optional: two or three concise active projects.
+currentWork:
+  - A current project
+  - Another current project
+
+# Optional: personal site, GitHub, ORCID, LinkedIn, or similar.
+links:
+  - label: Personal site
+    href: https://example.com

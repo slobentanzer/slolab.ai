@@ -1,0 +1,13 @@
+index: 2
+alumni: false
+name: Raeesa Yousaf
+role: Doctoral Researcher
+focus: Exploring agentic AI in clinical trials and the broader landscape of health information systems.
+expertise:
+  - Agentic AI
+  - Large language models
+  - Health information systems
+currentWork:
+  - Applying agentic AI to clinical trials
+  - Making complex health information more accessible
+image: /images/raeesa.jpeg
