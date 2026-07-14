@@ -17,6 +17,11 @@ expertise:
   - First area
   - Second area
 
+# Optional: what you value in working together, for collaborators and applicants.
+values:
+  - High flexibility
+  - Rapid responses
+
 # Optional: two or three concise active projects.
 currentWork:
   - A current project

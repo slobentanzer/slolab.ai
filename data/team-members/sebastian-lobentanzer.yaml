@@ -8,6 +8,10 @@ expertise:
   - Pharmacology
   - Molecular causality
   - Software engineering
+values:
+  - High flexibility
+  - Rapid responses
+  - Open, agile iteration
 currentWork:
   - Building accessible, robust tools for biomedical research
   - Exploring foundational principles and general-purpose LLM agents

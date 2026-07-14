@@ -530,6 +530,24 @@ function PersonDisplay({
             </div>
           )}
 
+          {member.values && member.values.length > 0 && (
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-indigo-300/70">
+                What I value
+              </p>
+              <ul className="flex flex-wrap gap-2" aria-label="What I value">
+                {member.values.map((item) => (
+                  <li
+                    key={item}
+                    className="rounded-full border border-indigo-400/20 bg-indigo-500/10 px-3 py-1 text-xs text-indigo-200"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {member.currentWork && member.currentWork.length > 0 && (
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-indigo-300/70">
