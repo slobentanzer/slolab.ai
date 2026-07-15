@@ -1,6 +1,32 @@
+# Required: unique whole number controlling display order.
 index: 5
+
+# Required: set to true to move this profile out of the current-members showcase.
 alumni: false
+
 name: Andreas Obermeier
-role: Doctoral Researcher
-focus: Conducting doctoral research while also working at Roche.
+role: PhD student
+focus: Knowledge management for rAAV-based gene therapy manufacturing 
 image: /images/andreas.png
+
+# Optional: short, browsable labels.
+expertise:
+  - Bioinformatics
+  - Pharmaceutical manufacturing
+  - Knowledge graphs
+
+# Optional: what you value in working together, for collaborators and applicants.
+values:
+  - Open-mindedness
+  - Creativity
+  - Communication
+
+# Optional: two or three concise active projects.
+currentWork:
+  - Review article on Knowledge management in rAAV-based gene therapy manufacturing
+  - Knowledge framework for the rAAV manufacturing process
+
+# Optional: personal site, GitHub, ORCID, LinkedIn, or similar.
+links:
+  - label: Email
+    href: mailto:andreas.obermeier@roche.com

@@ -8,6 +8,7 @@ import {
   useMotionValue,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
   type MotionValue,
 } from 'framer-motion'
@@ -23,36 +24,33 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
   })
 
   const totalMembers = members.length
-  const trailingViewports = 0.2
-  const scrollViewports = totalMembers + trailingViewports
+  const scrollViewports = totalMembers
   const scrollStops = [
     ...Array.from({ length: totalMembers }, (_, i) => i / scrollViewports),
     1,
-  ]
-  const indexStops = [
-    ...Array.from({ length: totalMembers }, (_, i) => i),
-    totalMembers - 1,
   ]
   const imageIndexStops = [
     ...Array.from({ length: totalMembers }, (_, i) => i),
     totalMembers - 0.56,
   ]
-  const exitStart = (scrollViewports - 1) / scrollViewports
-  const exitEnd = 1
-  const currentPersonIndex = useTransform(
-    scrollYProgress,
-    scrollStops,
-    indexStops
-  )
+  const currentPersonIndex = useTransform(scrollYProgress, (progress) => {
+    const position = progress * scrollViewports
+    const lastIndex = totalMembers - 1
+    const finalTransitionStart = Math.max(0, lastIndex - 1)
+
+    if (position <= finalTransitionStart) return position
+    if (position >= lastIndex) return lastIndex
+
+    // Preserve the incoming scroll velocity, then ease it down to zero as the
+    // final profile settles. The same curve runs in reverse when scrolling up.
+    const t = position - finalTransitionStart
+    const eased = t + t * t - t * t * t
+    return finalTransitionStart + eased
+  })
   const currentImageIndex = useTransform(
     scrollYProgress,
     scrollStops,
     imageIndexStops
-  )
-  const showcaseY = useTransform(
-    scrollYProgress,
-    [exitStart, exitEnd],
-    ['0vh', '-100vh']
   )
 
   return (
@@ -62,10 +60,11 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
       style={{ position: 'relative', height: `${scrollViewports * 100}vh` }}
     >
       <NeonBackground />
-      {/* Hold the last profile, then move it upward naturally before the footer enters. */}
-      <motion.div
-        className="fixed left-0 right-0 bottom-0 z-10 pointer-events-none"
-        style={{ top: '120px', y: showcaseY }}
+      {/* Sticky positioning lets the showcase leave with the section so the
+          footer enters through normal document flow, without a scroll tail. */}
+      <div
+        className="sticky left-0 right-0 z-10 h-[calc(100vh-120px)] pointer-events-none"
+        style={{ top: '120px' }}
       >
         <ParticleShadow imageIndex={currentImageIndex} cardRef={cardRef} />
         <div className="relative z-10 h-[calc(100vh-120px)] flex items-center justify-center px-8 sm:px-12 md:px-20">
@@ -88,7 +87,7 @@ export default function PeopleShowcase({ members }: { members: TeamMember[] }) {
             </motion.div>
           </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }
@@ -116,13 +115,13 @@ type ShadowParticle = {
   color: string
 }
 
-function createParticleCloud(seed: number, count = 480): ShadowParticle[] {
+function createParticleCloud(seed: number, count = 360): ShadowParticle[] {
   let state = Math.max(1, seed)
   const random = () => {
     state = (state * 16807) % 2147483647
     return (state - 1) / 2147483646
   }
-  const colors = ['129, 140, 180', '139, 126, 164', '107, 126, 151']
+  const colors = ['153, 164, 204', '163, 150, 188', '132, 151, 177']
 
   return Array.from({ length: count }, () => {
     // Left/right edges get more particles and a deeper frame: the card's
@@ -147,7 +146,7 @@ function createParticleCloud(seed: number, count = 480): ShadowParticle[] {
       u: random(),
       v: random(),
       radius: 0.55 + random() * 0.8,
-      alpha: 0.28 + random() * 0.32,
+      alpha: 0.38 + random() * 0.34,
       amplitude: 0.8 + random() * 2.6,
       phaseX: random() * Math.PI * 2,
       phaseY: random() * Math.PI * 2,
@@ -190,14 +189,19 @@ function ParticleShadow({
     const forceRange = forceMax - forceMin || 1
     let width = 0
     let height = 0
+    let cardLeft = 0
+    let cardTop = 0
+    let cardRight = 0
+    let cardBottom = 0
+    let cardWidth = 0
+    let cardHeight = 0
+    let hasCardBounds = false
     let latestProgress = imageIndex.get()
     let animationFrame: number | null = null
     let pageVisible = document.visibilityState === 'visible'
+    let canvasVisible = false
     let rippleStartedAt: number | null = null
     let rippleDirection = 1
-    let smoothedVelocity = 0
-    let lastProgressSample = imageIndex.get()
-    let lastSampleTime: number | null = null
 
     const resize = () => {
       width = canvas.clientWidth
@@ -208,20 +212,28 @@ function ParticleShadow({
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
     }
 
-    const draw = (progress: number, time: number) => {
-      context.clearRect(0, 0, width, height)
-
+    const measureCard = () => {
       const card = cardRef.current
-      if (!card) return
+      if (!card) {
+        hasCardBounds = false
+        return
+      }
 
       const canvasBounds = canvas.getBoundingClientRect()
       const cardBounds = card.getBoundingClientRect()
-      const cardLeft = cardBounds.left - canvasBounds.left
-      const cardTop = cardBounds.top - canvasBounds.top
-      const cardRight = cardBounds.right - canvasBounds.left
-      const cardBottom = cardBounds.bottom - canvasBounds.top
-      const cardWidth = cardRight - cardLeft
-      const cardHeight = cardBottom - cardTop
+      cardLeft = cardBounds.left - canvasBounds.left
+      cardTop = cardBounds.top - canvasBounds.top
+      cardRight = cardBounds.right - canvasBounds.left
+      cardBottom = cardBounds.bottom - canvasBounds.top
+      cardWidth = cardRight - cardLeft
+      cardHeight = cardBottom - cardTop
+      hasCardBounds = true
+    }
+
+    const draw = (progress: number, time: number) => {
+      context.clearRect(0, 0, width, height)
+      if (!hasCardBounds) return
+
       const sectionProgress = progress - Math.floor(progress)
       const tilt = sectionProgress <= 0.47
         ? 0.5 + (sectionProgress / 0.47) * 0.5
@@ -238,19 +250,6 @@ function ParticleShadow({
       const centerX = cardLeft + cardWidth / 2
       const centerY = cardTop + cardHeight / 2
       const seconds = time / 1000
-
-      // Smoothed scroll velocity in progress units per second, so the cloud
-      // leans very slightly with the card's slow movement between bursts.
-      if (lastSampleTime !== null && time > lastSampleTime) {
-        const dt = time - lastSampleTime
-        const instantVelocity = ((progress - lastProgressSample) / dt) * 700
-        smoothedVelocity += (instantVelocity - smoothedVelocity) * Math.min(1, dt / 180)
-      }
-      lastProgressSample = progress
-      lastSampleTime = time
-      const drift = prefersReducedMotion
-        ? 0
-        : Math.max(-1, Math.min(1, smoothedVelocity * 1.2))
 
       context.globalCompositeOperation = 'source-over'
 
@@ -358,18 +357,19 @@ function ParticleShadow({
     }
 
     const updateAnimation = () => {
-      if (cardRef.current && pageVisible && !prefersReducedMotion) {
+      if (cardRef.current && canvasVisible && pageVisible && !prefersReducedMotion) {
         if (animationFrame === null) {
           animationFrame = requestAnimationFrame(animate)
         }
       } else {
         stopAnimation()
-        draw(latestProgress, performance.now())
+        if (canvasVisible) draw(latestProgress, performance.now())
       }
     }
 
     const redraw = () => {
       resize()
+      measureCard()
       draw(latestProgress, performance.now())
     }
     const handleProgress = (progress: number) => {
@@ -387,6 +387,11 @@ function ParticleShadow({
     const observer = new ResizeObserver(redraw)
     observer.observe(canvas)
     if (cardRef.current) observer.observe(cardRef.current)
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      canvasVisible = entry.isIntersecting
+      updateAnimation()
+    }, { rootMargin: '100px' })
+    visibilityObserver.observe(canvas)
     const unsubscribe = imageIndex.on('change', handleProgress)
     document.addEventListener('visibilitychange', handleVisibility)
     redraw()
@@ -395,6 +400,7 @@ function ParticleShadow({
     return () => {
       stopAnimation()
       observer.disconnect()
+      visibilityObserver.disconnect()
       unsubscribe()
       document.removeEventListener('visibilitychange', handleVisibility)
     }
@@ -420,18 +426,47 @@ function PersonDisplay({
   imageIndex: MotionValue<number>
   cardRef?: RefObject<HTMLDivElement | null>
 }) {
-  // Hold a subtle loaded tilt through most of the profile, then release into a fast turn.
-  const rotateY = useTransform(
-    imageIndex,
-    [index - 0.53, index - 0.47, index + 0.47, index + 0.53],
-    [-180, -25, 25, 180],
-    { clamp: true }
+  const prefersReducedMotion = useReducedMotion()
+  const initialProgress = imageIndex.get()
+  const initialActiveIndex = Math.floor(initialProgress + 0.5)
+  const activeIndexRef = useRef(initialActiveIndex)
+  const tilt = useTransform(imageIndex, (progress) => {
+    const delta = progress - index
+    const activeDelta = Math.max(-0.5, Math.min(0.5, delta))
+    return -25 + (activeDelta + 0.5) * 50
+  })
+  const flipTarget = useMotionValue(
+    index < initialActiveIndex ? 155 : index > initialActiveIndex ? -155 : 0
   )
+  const flipOffset = useSpring(flipTarget, {
+    stiffness: 520,
+    damping: 40,
+    mass: 0.6,
+  })
+
+  // The tilt follows scroll directly. Only the hidden/visible flip offset is
+  // sprung, so reaching the exit margin cannot leave a delayed tilt catch-up.
+  useEffect(() => {
+    return imageIndex.on('change', (progress) => {
+      const previousActiveIndex = activeIndexRef.current
+      const activeIndex = Math.floor(progress + 0.5)
+      if (activeIndex === previousActiveIndex) return
+
+      activeIndexRef.current = activeIndex
+      const target = index < activeIndex ? 155 : index > activeIndex ? -155 : 0
+      const participatesInFlip =
+        index === previousActiveIndex || index === activeIndex
+
+      flipTarget.set(target)
+      if (prefersReducedMotion || !participatesInFlip) {
+        flipOffset.jump(target)
+      }
+    })
+  }, [flipOffset, flipTarget, imageIndex, index, prefersReducedMotion])
 
   // Idle sway: when scrolling pauses, the card slowly tilts back and forth.
   // The sway ramps in over ~1.5s of stillness and drops quickly once
   // scrolling resumes, so it never fights the scroll-driven flip.
-  const prefersReducedMotion = useReducedMotion()
   const idleSway = useMotionValue(0)
   const swayState = useRef({ weight: 0, lastValue: 0, lastMoveAt: 0 })
   useAnimationFrame((time, delta) => {
@@ -447,7 +482,9 @@ function PersonDisplay({
     const angle = Math.sin(time / 1100) * 4.5 + Math.sin(time / 2600) * 1.5
     idleSway.set(angle * state.weight)
   })
-  const cardRotateY = useTransform(() => rotateY.get() + idleSway.get())
+  const cardRotateY = useTransform(
+    () => tilt.get() + flipOffset.get() + idleSway.get()
+  )
 
   const textY = useTransform(
     currentIndex,
