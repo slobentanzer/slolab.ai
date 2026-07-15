@@ -1,10 +1,34 @@
+# The loader ignores example.yaml. Fields marked optional may be removed entirely.
+
+# Required: unique whole number controlling display order.
 index: 3
+
+# Required: set to true to move this profile out of the current-members showcase.
 alumni: false
+
 name: Peyman Vahidi
 role: Doctoral Researcher
-focus: Using machine learning and bioinformatics to drive innovation in healthcare and medicine.
-expertise:
-  - Machine learning
-  - Bioinformatics
-  - Data science
+focus: Working on the intersection of Protein Language Models and agentic AI, building efficient models and orchestration frameworks.
 image: /images/peyman.jpg
+
+# Optional: short, browsable labels.
+expertise:
+  - Protein Language Models
+  - HPC
+
+# Optional: what you value in working together, for collaborators and applicants.
+values:
+  - Practical tools over premature complexity
+  - Building at the ML–biology interface
+
+# Optional: two or three concise active projects.
+currentWork:
+  - nanoPLM, a framework for pretraining Protein Language Models
+  - Building agentic scientific workflows more reliably
+
+# Optional: personal site, GitHub, ORCID, LinkedIn, or similar.
+links:
+  - label: GitHub
+    href: https://github.com/peymanvahidi
+  - label: LinkedIn
+    href: https://www.linkedin.com/in/heispv
