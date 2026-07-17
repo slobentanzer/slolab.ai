@@ -2,7 +2,19 @@ index: 4
 alumni: false
 name: Rupshali Dasgupta
 role: Doctoral Researcher
-focus: Working in biomedical AI at Helmholtz Munich.
+focus: Trustworthy AI for biomedical knowledge discovery
 expertise:
-  - Biomedical AI
+  - Knowledge graph construction and reasoning
+  - AI Agents and LLMs
+  - Federated Learning
+values:
+  - Collaboration
+  - Flexibility
+  - Interdisciplinarity
+currentWork:
+  - Cardiometabolic knowledge graph construction and reasoning
+  - Biomedical entity linking and normalization
+links:
+  - label: Website
+    href: https://sites.google.com/view/rupshali-dasgupta/home
 image: /images/rupshali.png
