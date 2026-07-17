@@ -1,0 +1,26 @@
+index: 6
+alumni: false
+
+name: Vladislav Samoilov
+role: Engineer
+focus: Developing cutting-edge agentic AI applications for the life sciences.
+image: /images/vlad.jpeg
+
+expertise:
+  - AI and Machine Learning
+  - Software engineering
+  - Product development
+
+values:
+  - Organization
+  - Ownership & Initiative
+
+currentWork:
+  - Agentic AI for the Virtual Human
+  - Democratization of Knowledge Management
+
+links:
+  - label: GitHub
+    href: https://github.com/VladSam42
+  - label: Personal site
+    href: https://vladsam.com/

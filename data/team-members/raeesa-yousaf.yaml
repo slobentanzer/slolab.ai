@@ -1,0 +1,34 @@
+# The loader ignores example.yaml. Fields marked optional may be removed entirely.
+
+# Required: unique whole number controlling display order.
+index: 2
+
+# Required: set to true to move this profile out of the current-members showcase.
+alumni: false
+
+name: Raeesa Yousaf
+role: Doctoral Researcher
+focus: Developing agentic AI systems for public health information and clinical trials, with a focus on measuring and taxonomizing information distortion in LLM-generated text.
+image: /images/raeesa.jpg
+
+# Optional: short, browsable labels.
+expertise:
+  - Natural Language Processing
+  - LLM systems
+
+# Optional: what you value in working together, for collaborators and applicants.
+values:
+  - Rigorous evaluation methodology
+  - Reusable, generalizable frameworks
+
+# Optional: two or three concise active projects.
+currentWork:
+  - Developing a distortion taxonomy for evaluating LLM-generated health summaries
+  - Cross-disease clinical trials platform work across German Health Centers (DZGs)
+
+# Optional: personal site, GitHub, ORCID, LinkedIn, or similar.
+links:
+  - label: LinkedIn
+    href: https://www.linkedin.com/in/raeesa-yousaf/ 
+  - label: Personal Website
+    href: https://raeesay.github.io/
